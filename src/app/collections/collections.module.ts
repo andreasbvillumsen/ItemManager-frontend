@@ -5,6 +5,7 @@ import { CollectionsRoutingModule } from './collections-routing.module';
 import { CollectionsComponent } from './collections.component';
 
 
+
 @NgModule({
   declarations: [
     CollectionsComponent
