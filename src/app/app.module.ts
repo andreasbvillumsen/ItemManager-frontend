@@ -1,11 +1,23 @@
-import { NgModule } from '@angular/core';
+import {Injectable, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import {Socket, SocketIoModule} from 'ngx-socket-io';
 import {environment} from '../environments/environment';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import {NgxsModule} from '@ngxs/store';
+
+
+@Injectable()
+export class SocketItemManager extends Socket {
+
+  constructor() {
+    super({url: 'http://localhost:3000/', options: {}});
+  }
+}
+
+
 
 @NgModule({
   declarations: [
@@ -14,11 +26,12 @@ import {NgxsModule} from '@ngxs/store';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    SocketIoModule,
     NgxsModule.forRoot([], {
       developmentMode: !environment.production
     }), NgxsLoggerPluginModule.forRoot()
   ],
-  providers: [],
+  providers: [SocketItemManager],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
