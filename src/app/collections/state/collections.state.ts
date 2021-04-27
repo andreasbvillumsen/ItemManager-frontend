@@ -3,7 +3,7 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
-import {ListenForCollections, StopListeningForCollections, UpdateCollections} from './collections.actions';
+import {AddCollection, ListenForCollections, StopListeningForCollections, UpdateCollections} from './collections.actions';
 
 export interface CollectionsStateModel{
   Collections: Collection[];
@@ -41,6 +41,34 @@ export class CollectionState {
       this.initSub.unsubscribe();
     }
   }
+  @Action(AddCollection)
+  AddCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
+    // this.initSub = this.collectionsService.add
+
+
+}
+  /*
+  export class AddCollection {
+  constructor(public collection: Collection) {}
+
+  static readonly type = '[collection] add collection';
+
+}
+
+export class UpdateCollection {
+  constructor(public collection: Collection) {}
+
+  static readonly type = '[collection] Update collection';
+
+}
+
+export class DeleteCollection {
+  constructor(public collection: Collection) {}
+
+  static readonly type = '[collection] delete collection';
+
+}
+   */
 
   @Action(UpdateCollections)
   updateCollections(ctx: StateContext<CollectionsStateModel>, action: UpdateCollections): void {
@@ -51,4 +79,6 @@ export class CollectionState {
     };
     ctx.setState(newState);
   }
+
+
 }
