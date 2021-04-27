@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import {Collection} from '../models/collection';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,4 +8,10 @@ import { Injectable } from '@angular/core';
 export class CollectionsService {
 
   constructor() { }
+
+  ListenForCollections(): Observable<Collection[]> {
+
+    return null;
+
+  }
 }
