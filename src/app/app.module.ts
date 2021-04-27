@@ -1,8 +1,19 @@
-import { NgModule } from '@angular/core';
+import {Injectable, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import {Socket, SocketIoModule} from 'ngx-socket-io';
+
+
+@Injectable()
+export class SocketItemManager extends Socket {
+
+  constructor() {
+    super({url: 'http://localhost:3000/', options: {}});
+  }
+}
+
 
 @NgModule({
   declarations: [
@@ -10,9 +21,10 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SocketIoModule,
   ],
-  providers: [],
+  providers: [SocketItemManager],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
