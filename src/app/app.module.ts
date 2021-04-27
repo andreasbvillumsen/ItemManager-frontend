@@ -4,6 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {Socket, SocketIoModule} from 'ngx-socket-io';
+import {environment} from '../environments/environment';
+import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
+import {NgxsModule} from '@ngxs/store';
 
 
 @Injectable()
@@ -15,6 +18,7 @@ export class SocketItemManager extends Socket {
 }
 
 
+
 @NgModule({
   declarations: [
     AppComponent
@@ -23,6 +27,9 @@ export class SocketItemManager extends Socket {
     BrowserModule,
     AppRoutingModule,
     SocketIoModule,
+    NgxsModule.forRoot([], {
+      developmentMode: !environment.production
+    }), NgxsLoggerPluginModule.forRoot()
   ],
   providers: [SocketItemManager],
   bootstrap: [AppComponent]
