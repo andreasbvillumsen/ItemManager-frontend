@@ -3,7 +3,14 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
-import {AddCollection, ListenForCollections, StopListeningForCollections, UpdateCollections} from './collections.actions';
+import {
+  AddCollection,
+  DeleteCollection,
+  ListenForCollections,
+  StopListeningForCollections,
+  UpdateCollection,
+  UpdateCollections
+} from './collections.actions';
 
 export interface CollectionsStateModel{
   Collections: Collection[];
@@ -29,7 +36,7 @@ export class CollectionState {
 
   @Action(ListenForCollections)
   listenForCollections(ctx: StateContext<CollectionsStateModel>): void {
-    this.initSub = this.collectionsService.ListenForCollections()
+    this.initSub = this.collectionsService.listenForCollections()
       .subscribe(collections => {
         ctx.dispatch(new UpdateCollections(collections));
       });
@@ -41,12 +48,27 @@ export class CollectionState {
       this.initSub.unsubscribe();
     }
   }
+
   @Action(AddCollection)
   AddCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
-    // this.initSub = this.collectionsService.add
+    this.collectionsService.createCollection(action.collection);
 
 
-}
+  }
+
+  @Action(UpdateCollection)
+  UpdateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
+    this.collectionsService.updateCollection(action.collection);
+
+
+  }
+
+  @Action(DeleteCollection)
+  DeleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
+    this.collectionsService.deleteCollection(action.collection);
+
+
+  }
   /*
   export class AddCollection {
   constructor(public collection: Collection) {}
