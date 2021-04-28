@@ -9,7 +9,7 @@ import {
   ListenForCollections,
   StopListeningForCollections,
   UpdateCollection,
-  UpdateCollections
+  UpdateCollectionsStore
 } from './collections.actions';
 
 export interface CollectionsStateModel{
@@ -38,7 +38,7 @@ export class CollectionState {
   listenForCollections(ctx: StateContext<CollectionsStateModel>): void {
     this.initSub = this.collectionsService.listenForCollections()
       .subscribe(collections => {
-        ctx.dispatch(new UpdateCollections(collections));
+        ctx.dispatch(new UpdateCollectionsStore(collections));
       });
   }
 
@@ -92,8 +92,8 @@ export class DeleteCollection {
 }
    */
 
-  @Action(UpdateCollections)
-  updateCollections(ctx: StateContext<CollectionsStateModel>, action: UpdateCollections): void {
+  @Action(UpdateCollectionsStore)
+  updateCollections(ctx: StateContext<CollectionsStateModel>, action: UpdateCollectionsStore): void {
     const state = ctx.getState();
     const newState: CollectionsStateModel = {
       ...state,
