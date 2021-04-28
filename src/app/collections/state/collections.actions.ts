@@ -30,7 +30,7 @@ export class DeleteCollection {
 
 }
 
-export class UpdateCollections {
+export class UpdateCollectionsStore {
   constructor(public collections: Collection[]) {}
 
   static readonly type = '[collection] Update collections';
