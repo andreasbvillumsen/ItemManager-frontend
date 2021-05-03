@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Item} from '../../../items/shared/models/item.model';
 import {UserDto} from '../dtos/user.dto';
-import {LoginDto} from '../dtos/login.dto';
+import {LoginDto} from '../../../auth/shared/dtos/login.dto';
 import {environment} from '../../../../environments/environment.prod';
 import {map} from 'rxjs/operators';
 import {stringify} from 'querystring';

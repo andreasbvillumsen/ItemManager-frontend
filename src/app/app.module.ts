@@ -7,6 +7,7 @@ import {Socket, SocketIoModule} from 'ngx-socket-io';
 import {environment} from '../environments/environment';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import {NgxsModule} from '@ngxs/store';
+import { AuthComponent } from './auth/auth.component';
 
 
 @Injectable()
@@ -21,7 +22,8 @@ export class SocketItemManager extends Socket {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
