@@ -8,6 +8,7 @@ import {LoginDto} from '../../../auth/shared/dtos/login.dto';
 import {environment} from '../../../../environments/environment.prod';
 import {map} from 'rxjs/operators';
 import {stringify} from 'querystring';
+import {User} from '../models/user.model';
 
 
 @Injectable({
@@ -34,6 +35,11 @@ export class UsersService {
       }));
   }
   */
+
+  ListenForUsers(): Observable<UserDto[]> {
+    return this.socket
+      .fromEvent<UserDto[]>('allUsers');
+  }
 
   createUser(dto: UserDto): void {
     this.socket.emit('createuser', dto);
