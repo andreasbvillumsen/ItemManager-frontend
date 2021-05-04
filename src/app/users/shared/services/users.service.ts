@@ -17,7 +17,7 @@ export class UsersService {
 
   constructor(private socket: SocketItemManager,
               private http: HttpClient) { }
-
+/*
   login(dto: LoginDto): Observable<boolean> {
     return this.http.post<any>(environment.backendUrl + 'auth/login', dto)
       .pipe(map(response => {
@@ -33,6 +33,7 @@ export class UsersService {
         }
       }));
   }
+  */
 
   createUser(dto: UserDto): void {
     this.socket.emit('createuser', dto);

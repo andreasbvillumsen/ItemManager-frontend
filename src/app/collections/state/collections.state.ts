@@ -69,28 +69,6 @@ export class CollectionState {
 
 
   }
-  /*
-  export class AddCollection {
-  constructor(public collection: Collection) {}
-
-  static readonly type = '[collection] add collection';
-
-}
-
-export class UpdateCollection {
-  constructor(public collection: Collection) {}
-
-  static readonly type = '[collection] Update collection';
-
-}
-
-export class DeleteCollection {
-  constructor(public collection: Collection) {}
-
-  static readonly type = '[collection] delete collection';
-
-}
-   */
 
   @Action(UpdateCollectionsStore)
   updateCollections(ctx: StateContext<CollectionsStateModel>, action: UpdateCollectionsStore): void {

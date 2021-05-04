@@ -1,11 +1,11 @@
-import {LoginDto} from '../shared/dtos/login.dto';
-import {UserDto} from '../shared/dtos/user.dto';
 
+import {UserDto} from '../shared/dtos/user.dto';
+/*
 export class Login{
   constructor(public loginDTO: LoginDto) {}
 
   static readonly type = '[loginDTO] login user';
-}
+}*/
 
 export class CreateUser {
   constructor(public user: UserDto) {}
