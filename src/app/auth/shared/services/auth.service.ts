@@ -6,14 +6,19 @@ import {environment} from '../../../../environments/environment';
 import {map} from 'rxjs/operators';
 import {LoginDto} from '../dtos/login.dto';
 import {RegisterDto} from '../dtos/register.dto';
+import {AuthState} from '../../state/auth.state';
+import {AuthModel} from '../models/auth.model';
+import {Select, Store} from '@ngxs/store';
+import {SetAuth} from '../../state/auth.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   @Output() user: EventEmitter<User> = new EventEmitter();
+  @Select(AuthState.auth) auth$: Observable<AuthModel> | undefined;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private store: Store) {}
 
   // Check if we can log in user. If we can, then we store the token and username in local storage.
   login(loginDto: LoginDto): Observable<boolean> {
@@ -21,10 +26,13 @@ export class AuthService {
       .pipe(map(response => {
         const token = response.token;
         const user: User = response.user;
+        const authModel: AuthModel = { user, token };
         // login successful if there's a jwt token in the response
         if (token) {
+          this.store.dispatch(new SetAuth(authModel));
+
           // store username and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('currentUser', JSON.stringify({ user, token }));
+          // localStorage.setItem('currentUser', JSON.stringify({ user, token }));
           this.user.emit(user);
           // return true to indicate successful login
           return true;
@@ -40,8 +48,11 @@ export class AuthService {
       .pipe(map(response => {
         const token = response.token;
         const user: User = response.user;
+        const authModel: AuthModel = { user, token };
         // register successful if there's a jwt token in the response
         if (token) {
+          this.store.dispatch(new SetAuth(authModel));
+
           // store username and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify({ user, token }));
           this.user.emit(user);
@@ -54,45 +65,10 @@ export class AuthService {
       }));
   }
 
-  // Get user's token from local storage
-  getToken(): string {
-    // Get the logged in user from local storage.
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    // Check if there is a logged in user.
-    if (currentUser) {
-      // There is a logged in user, so we return the requested token.
-      return currentUser.token;
-    } else {
-      // There is no logged in user, we return null.
-      return null;
-    }
-  }
-
-  // Get user's username from local storage
-  getUser(): User {
-    // Get the logged in user from local storage.
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    // Check if there is a logged in user.
-    if (currentUser) {
-      const user: User = currentUser.user;
-      // There is a logged in user, so we return the requested username.
-      return user;
-    }
-    else {
-      // There is no logged in user, we return null.
-      return null;
-    }
-  }
-
-  userIsLoggedIn(): boolean {
-    if (this.getUser() !== null) { return true; }
-
-    return false;
-  }
-
   logout(): void {
     // remove user's token from local storage to log user out
-    localStorage.removeItem('currentUser');
+    // localStorage.removeItem('currentUser');
+    this.store.dispatch(new SetAuth(null));
     this.user.emit(null);
   }
 }
