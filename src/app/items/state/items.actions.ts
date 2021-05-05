@@ -38,9 +38,9 @@ export class UpdateItemsStore {
 }
 
 export class ItemsInCollection {
-  constructor(public items: Item[]) {}
+  constructor(public collectionId: number) {}
 
-    static readonly type = '[item] items in collection';
+    static readonly type = '[item] get items in collection';
 
 }
 

@@ -5,7 +5,7 @@ import {Item} from '../shared/models/item.model';
 import {ItemsService} from '../shared/services/items.service';
 import {
   AddItem,
-  DeleteItem,
+  DeleteItem, ItemsInCollection,
   ListenForItems,
   StopListeningForItems,
   UpdateItem,
@@ -68,6 +68,10 @@ export class ItemState {
     this.itemService.deleteItem(action.item);
 
 
+  }
+  @Action(ItemsInCollection)
+  ItemsInCollection(ctx: StateContext<ItemsStateModel> , action: ItemsInCollection): void{
+    this.itemService.getItemsInCollection(action.collectionId);
   }
 
   @Action(UpdateItemsStore)

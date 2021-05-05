@@ -54,7 +54,7 @@ export class AuthService {
           this.store.dispatch(new SetAuth(authModel));
 
           // store username and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('currentUser', JSON.stringify({ user, token }));
+          // localStorage.setItem('currentUser', JSON.stringify({ user, token }));
           this.user.emit(user);
           // return true to indicate successful register login
           return true;

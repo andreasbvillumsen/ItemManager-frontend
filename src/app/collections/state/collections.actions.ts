@@ -37,4 +37,11 @@ export class UpdateCollectionsStore {
 
 }
 
+export class GetCollectionsForUser{
+  constructor(public Userid: number){}
+
+  static readonly type = '[collection] get collections for user';
+}
+
+
 

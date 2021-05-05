@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
   AddCollection,
-  DeleteCollection,
+  DeleteCollection, GetCollectionsForUser,
   ListenForCollections,
   StopListeningForCollections,
   UpdateCollection,
@@ -80,5 +80,10 @@ export class CollectionState {
     ctx.setState(newState);
   }
 
+  @Action(GetCollectionsForUser)
+  getCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: GetCollectionsForUser): void{
+    this.collectionsService.getCollectionsForUser(action.Userid);
+
+  }
 
 }
