@@ -30,8 +30,8 @@ export class ItemsService {
     this.socket.emit('deleteItem', dto);
   }
 
-  getItemsInCollection(dto: CollectionDto): void {
-    this.socket.emit('getItemsInCollection', dto);
+  getItemsInCollection(collectionId: number): void {
+    this.socket.emit('getItemsInCollection', collectionId);
   }
 
 }

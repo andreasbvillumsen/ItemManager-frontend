@@ -1,6 +1,8 @@
 export interface UserDto {
-  id: string;
-  firstName: string;
-  lastName: string;
+  id: number;
+  email: string;
+  firstname: string;
+  lastname: string;
   password?: string;
+  // collectionIds?: number[];
 }

@@ -8,6 +8,7 @@ import {LoginDto} from '../../../auth/shared/dtos/login.dto';
 import {environment} from '../../../../environments/environment.prod';
 import {map} from 'rxjs/operators';
 import {stringify} from 'querystring';
+import {User} from '../models/user.model';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class UsersService {
 
   constructor(private socket: SocketItemManager,
               private http: HttpClient) { }
-
+/*
   login(dto: LoginDto): Observable<boolean> {
     return this.http.post<any>(environment.backendUrl + 'auth/login', dto)
       .pipe(map(response => {
@@ -32,6 +33,12 @@ export class UsersService {
           return false;
         }
       }));
+  }
+  */
+
+  ListenForUsers(): Observable<UserDto[]> {
+    return this.socket
+      .fromEvent<UserDto[]>('allUsers');
   }
 
   createUser(dto: UserDto): void {

@@ -28,5 +28,8 @@ export class CollectionsService {
   deleteCollection(dto: CollectionDto): void {
     this.socket.emit('deleteCollection', dto);
 }
+  getCollectionsForUser(Userid: number): void {
+    this.socket.emit('getCollectionsForUser', Userid);
+  }
 
 }
