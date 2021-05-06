@@ -1,15 +1,15 @@
-import {User} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/UserModel';
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {UsersService} from '../shared/services/users.service';
 import {CollectionsStateModel} from '../../collections/state/collections.state';
-import {Collection} from '../../collections/shared/models/collection';
+import {CollectionModel} from '../../collections/shared/models/CollectionModel';
 import {CreateUser, DeleteUser, UpdateUser} from './users.actions';
 import {ItemsStateModel} from '../../items/state/items.state';
 
 export interface UsersStateModel{
-  User: User;
+  User: UserModel;
 }
 
 @State<UsersStateModel>({
@@ -26,7 +26,7 @@ export class UsersState{
   }
 
   @Selector()
-  static User(state: UsersStateModel): User {
+  static User(state: UsersStateModel): UserModel {
     return state.User;
   }
 
@@ -44,7 +44,7 @@ export class UsersState{
 
   @Action(DeleteUser)
   DeleteUser(ctx: StateContext<UsersStateModel>, action: DeleteUser): void {
-    this.usersService.deleteUser(action.user);
+    this.usersService.deleteUser(action.userId);
 
   }
 

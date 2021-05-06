@@ -1,6 +1,6 @@
-import {User} from '../../../users/shared/models/user.model';
+import {UserModel} from '../../../users/shared/models/UserModel';
 
 export interface AuthDto {
-  user: User;
+  user: UserModel;
   token: string;
 }

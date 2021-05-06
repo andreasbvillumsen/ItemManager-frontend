@@ -1,4 +1,4 @@
-import {Collection} from '../shared/models/collection';
+import {CollectionModel} from '../shared/models/CollectionModel';
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
@@ -13,7 +13,7 @@ import {
 } from './collections.actions';
 
 export interface CollectionsStateModel{
-  Collections: Collection[];
+  Collections: CollectionModel[];
 }
 
 @State<CollectionsStateModel>({
@@ -30,7 +30,7 @@ export class CollectionState {
   }
 
   @Selector()
-  static Collections(state: CollectionsStateModel): Collection[] {
+  static Collections(state: CollectionsStateModel): CollectionModel[] {
     return state.Collections;
   }
 
@@ -65,7 +65,7 @@ export class CollectionState {
 
   @Action(DeleteCollection)
   DeleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
-    this.collectionsService.deleteCollection(action.collection);
+    this.collectionsService.deleteCollection(action.collectionId);
 
 
   }

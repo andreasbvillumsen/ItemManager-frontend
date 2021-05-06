@@ -1,7 +1,7 @@
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {Item} from '../shared/models/item.model';
+import {ItemModel} from '../shared/models/ItemModel';
 import {ItemsService} from '../shared/services/items.service';
 import {
   AddItem,
@@ -13,7 +13,7 @@ import {
 } from './items.actions';
 
 export interface ItemsStateModel{
-  items: Item[];
+  items: ItemModel[];
 }
 
 @State<ItemsStateModel>({
@@ -30,7 +30,7 @@ export class ItemState {
   }
 
   @Selector()
-  static items(state: ItemsStateModel): Item[] {
+  static items(state: ItemsStateModel): ItemModel[] {
     return state.items;
   }
 
@@ -65,7 +65,7 @@ export class ItemState {
 
   @Action(DeleteItem)
   DeleteItem(ctx: StateContext<ItemsStateModel> , action: DeleteItem): void {
-    this.itemService.deleteItem(action.item);
+    this.itemService.deleteItem(action.itemId);
 
 
   }

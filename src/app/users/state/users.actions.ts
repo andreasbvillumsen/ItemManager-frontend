@@ -1,5 +1,4 @@
-
-import {UserDto} from '../shared/dtos/user.dto';
+import {UserModel} from '../shared/models/UserModel';
 /*
 export class Login{
   constructor(public loginDTO: LoginDto) {}
@@ -8,23 +7,23 @@ export class Login{
 }*/
 
 export class CreateUser {
-  constructor(public user: UserDto) {}
+  constructor(public user: UserModel) {}
 
-  static readonly type = '[UserDto] create user';
+  static readonly type = '[ReadUserDto] create user';
 
 }
 
 export class UpdateUser {
-  constructor(public user: UserDto) {}
+  constructor(public user: UserModel) {}
 
-  static readonly type = '[UserDto] Update user';
+  static readonly type = '[ReadUserDto] Update user';
 
 }
 
 export class DeleteUser {
-  constructor(public user: UserDto) {}
+  constructor(public userId: number) {}
 
-  static readonly type = '[UserDto] delete user';
+  static readonly type = '[ReadUserDto] delete user';
 
 }
 

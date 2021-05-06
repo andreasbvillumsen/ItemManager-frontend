@@ -1,4 +1,4 @@
-import {Collection} from '../shared/models/collection';
+import {CollectionModel} from '../shared/models/CollectionModel';
 
 
 export class ListenForCollections {
@@ -10,28 +10,28 @@ export class StopListeningForCollections {
 }
 
 export class AddCollection {
-  constructor(public collection: Collection) {}
+  constructor(public collection: CollectionModel) {}
 
   static readonly type = '[collection] add collection';
 
 }
 
 export class UpdateCollection {
-  constructor(public collection: Collection) {}
+  constructor(public collection: CollectionModel) {}
 
   static readonly type = '[collection] Update collection';
 
 }
 
 export class DeleteCollection {
-  constructor(public collection: Collection) {}
+  constructor(public collectionId: number) {}
 
   static readonly type = '[collection] delete collection';
 
 }
 
 export class UpdateCollectionsStore {
-  constructor(public collections: Collection[]) {}
+  constructor(public collections: CollectionModel[]) {}
 
   static readonly type = '[collection] Update collections';
 

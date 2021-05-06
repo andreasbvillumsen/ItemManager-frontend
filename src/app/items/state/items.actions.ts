@@ -1,4 +1,4 @@
-import {Item} from '../shared/models/item.model';
+import {ItemModel} from '../shared/models/ItemModel';
 
 
 export class ListenForItems {
@@ -10,28 +10,28 @@ export class StopListeningForItems {
 }
 
 export class AddItem {
-  constructor(public item: Item) {}
+  constructor(public item: ItemModel) {}
 
   static readonly type = '[item] add item';
 
 }
 
 export class UpdateItem {
-  constructor(public item: Item) {}
+  constructor(public item: ItemModel) {}
 
   static readonly type = '[item] Update item';
 
 }
 
 export class DeleteItem {
-  constructor(public item: Item) {}
+  constructor(public itemId: number) {}
 
   static readonly type = '[item] delete item';
 
 }
 
 export class UpdateItemsStore {
-  constructor(public items: Item[]) {}
+  constructor(public items: ItemModel[]) {}
 
   static readonly type = '[item] Update items';
 

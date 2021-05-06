@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {User} from '../../../users/shared/models/user.model';
+import {UserModel} from '../../../users/shared/models/UserModel';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {map} from 'rxjs/operators';
@@ -15,7 +15,7 @@ import {SetAuth} from '../../state/auth.actions';
   providedIn: 'root'
 })
 export class AuthService {
-  @Output() user: EventEmitter<User> = new EventEmitter();
+  @Output() user: EventEmitter<UserModel> = new EventEmitter();
   @Select(AuthState.auth) auth$: Observable<AuthModel> | undefined;
 
   constructor(private http: HttpClient, private store: Store) {}
@@ -25,7 +25,7 @@ export class AuthService {
     return this.http.post<any>(environment.apiUrl + '/auth/login', loginDto)
       .pipe(map(response => {
         const token = response.token;
-        const user: User = response.user;
+        const user: UserModel = response.user;
         const authModel: AuthModel = { user, token };
         // login successful if there's a jwt token in the response
         if (token) {
@@ -47,7 +47,7 @@ export class AuthService {
     return this.http.post<any>(environment.apiUrl + '/auth/register', registerDto)
       .pipe(map(response => {
         const token = response.token;
-        const user: User = response.user;
+        const user: UserModel = response.user;
         const authModel: AuthModel = { user, token };
         // register successful if there's a jwt token in the response
         if (token) {

@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
 import {SocketItemManager} from '../../../app.module';
 import {Observable} from 'rxjs';
-import {Item} from '../models/item.model';
-import {ItemDto} from '../dtos/item.dto';
-import {CollectionDto} from '../../../collections/shared/dtos/collection.dto';
+import {ItemModel} from '../models/ItemModel';
+import {ReadItemDto} from '../dtos/read-item.dto';
+import {ReadCollectionDto} from '../../../collections/shared/dtos/read-collection.dto';
+import {map, tap} from 'rxjs/operators';
+import {CollectionModel} from '../../../collections/shared/models/CollectionModel';
+import {CreateItemDto} from '../dtos/create-item.dto';
+import {UpdateItemDto} from '../dtos/update-item.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,22 +16,31 @@ export class ItemsService {
 
   constructor(private socket: SocketItemManager) { }
 
-  listenForItems(): Observable<Item[]>{
+  listenForItems(): Observable<ItemModel[]>{
     return this.socket
-      .fromEvent<Item[]>('items');
+      .fromEvent<ReadItemDto[]>('allItems').pipe(
+        map((readItemDtos: ReadItemDto[] ) =>
+          readItemDtos.map(readItemDto => ({
+            id: readItemDto.id,
+            name: readItemDto.name,
+            desc: readItemDto.desc,
+            collection: null }) )
+      ));
+  }
+
+  createItem(item: ItemModel): void {
+    const createItemDto: CreateItemDto = {name: item.name , desc: item.desc, collection: item.collection};
+    this.socket.emit('createItem', createItemDto);
+  }
+
+  updateItem(item: ItemModel): void {
+    const updateItemDto: UpdateItemDto = {id: item.id, name: item.name , desc: item.desc, collection: item.collection};
+    this.socket.emit('updateItem', updateItemDto);
 
   }
 
-  createItem(dto: ItemDto): void {
-    this.socket.emit('createItem', dto);
-  }
-
-  updateItem(dto: ItemDto): void {
-    this.socket.emit('updateItem', dto);
-  }
-
-  deleteItem(dto: ItemDto): void {
-    this.socket.emit('deleteItem', dto);
+  deleteItem(Itemid: number): void {
+    this.socket.emit('deleteItem', Itemid);
   }
 
   getItemsInCollection(collectionId: number): void {
