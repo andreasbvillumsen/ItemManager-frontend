@@ -13,7 +13,17 @@ export class CollectionsService {
 
   listenForCollections(): Observable<Collection[]>{
     return this.socket
-      .fromEvent<Collection[]>('collections');
+      .fromEvent<Collection[]>('allCollections');
+
+  }
+  listenForAllCollectionsForUser(): Observable<Collection[]>{
+    return this.socket
+      .fromEvent<Collection[]>('allCollectionsForUser');
+
+  }
+  listenForOneCollection(): Observable<Collection>{
+    return this.socket
+      .fromEvent<Collection>('oneCollection');
 
   }
 
