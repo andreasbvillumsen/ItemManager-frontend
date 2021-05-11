@@ -1,6 +1,5 @@
 import {Injectable, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {Socket, SocketIoModule} from 'ngx-socket-io';
@@ -13,13 +12,15 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ItemsShowComponent } from './items/items-show/items-show.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {AuthState} from './auth/state/auth.state';
 
 
 @Injectable()
 export class SocketItemManager extends Socket {
-
   constructor() {
-    super({url: 'http://localhost:3000/', options: {}});
+    super({url: 'http://localhost:3400/', options: {}});
   }
 }
 
@@ -35,12 +36,14 @@ export class SocketItemManager extends Socket {
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
     SocketIoModule,
-    NgxsModule.forRoot([], {
+    NgxsModule.forRoot([AuthState], {
       developmentMode: !environment.production
     }),
     NgxsLoggerPluginModule.forRoot(),
-    NgxsStoragePluginModule.forRoot()
+    NgxsStoragePluginModule.forRoot(),
   ],
   providers: [SocketItemManager],
   bootstrap: [AppComponent]
