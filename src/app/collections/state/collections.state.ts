@@ -5,7 +5,7 @@ import {Subject, Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
   AddCollection,
-  DeleteCollection, GetCollectionsForUser,
+  DeleteCollection, GetAllCollections, GetCollectionsForUser,
   ListenForCollections, ListenForCollectionsForUser, ListenForErrors, StopListening,
   UpdateCollection,
   UpdateCollectionsStore, UpdateError
@@ -57,21 +57,21 @@ export class CollectionState {
   }
 
   @Action(AddCollection)
-  AddCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
+  addCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
     this.collectionsService.createCollection(action.collection, action.Userid);
 
 
   }
 
   @Action(UpdateCollection)
-  UpdateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
+  updateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
     this.collectionsService.updateCollection(action.collection, action.Userid);
 
 
   }
 
   @Action(DeleteCollection)
-  DeleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
+  deleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
     this.collectionsService.deleteCollection(action.collectionId, action.Userid);
 
 
@@ -93,8 +93,14 @@ export class CollectionState {
 
   }
 
+  @Action(GetAllCollections)
+  getAllCollections(ctx: StateContext<CollectionsStateModel>, action: GetCollectionsForUser): void{
+    this.collectionsService.getCollectionsForUser(action.Userid);
+
+  }
+
   @Action(ListenForCollectionsForUser)
-  ListenForCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: ListenForCollectionsForUser): void {
+  listenForCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: ListenForCollectionsForUser): void {
     this.collectionsService.listenForAllCollectionsForUser()
         .pipe(takeUntil(this.unsubscriber$))
         .subscribe(collections => {

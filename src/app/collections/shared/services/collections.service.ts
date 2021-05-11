@@ -18,7 +18,7 @@ export class CollectionsService {
   constructor(private socket: Socket) { }
 
   listenForCollections(): Observable<CollectionModel[]>{
-    return this.socket
+      return this.socket
       .fromEvent<ReadCollectionDto[]>('allCollections').pipe(
         map((readCollectionDtos: ReadCollectionDto[] ) =>
         readCollectionDtos.map(readCollectionDto => ({
@@ -29,6 +29,7 @@ export class CollectionsService {
 
         })))
       );
+
 
 
 /*
@@ -91,7 +92,9 @@ export class CollectionsService {
   getCollectionsForUser(userid: number): void {
       this.socket.emit('findAllCollectionsByUserID', userid);
   }
-
+  getAllCollections(): void {
+      this.socket.emit('findAllCollections');
+  }
   listenForErrors(): Observable<string>{
       return this.socket
           .fromEvent<string>('error');
