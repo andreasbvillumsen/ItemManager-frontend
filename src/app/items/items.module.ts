@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ItemsRoutingModule } from './items-routing.module';
 import { ItemsComponent } from './items.component';
+import {NgxsModule} from '@ngxs/store';
+import {CollectionState} from '../collections/state/collections.state';
 
 
 @NgModule({
@@ -11,7 +13,8 @@ import { ItemsComponent } from './items.component';
   ],
   imports: [
     CommonModule,
-    ItemsRoutingModule
+    ItemsRoutingModule,
+    NgxsModule.forFeature([CollectionState])
   ]
 })
 export class ItemsModule { }

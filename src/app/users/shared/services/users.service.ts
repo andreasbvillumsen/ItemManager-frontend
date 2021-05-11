@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {SocketItemManager} from '../../../app.module';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ReadUserDto} from '../dtos/read-user.dto';
@@ -13,6 +12,7 @@ import {CreateCollectionDto} from '../../../collections/shared/dtos/create-colle
 import {CreateUser} from '../../state/users.actions';
 import {CreateUserDto} from '../dtos/create-user.dto';
 import {UpdateUserDto} from '../dtos/update-user.dto';
+import {Socket} from 'ngx-socket-io';
 
 
 @Injectable({
@@ -20,7 +20,7 @@ import {UpdateUserDto} from '../dtos/update-user.dto';
 })
 export class UsersService {
 
-  constructor(private socket: SocketItemManager,
+  constructor(private socket: Socket,
               private http: HttpClient) {
   }
 
@@ -70,6 +70,11 @@ export class UsersService {
 
   deleteUser(usrId: number): void {
     this.socket.emit('deleteUser', usrId);
+  }
+
+  listenForErrors(): Observable<string>{
+      return this.socket
+          .fromEvent<string>('error');
   }
 
 
