@@ -6,8 +6,8 @@ import {CollectionsService} from '../shared/services/collections.service';
 import {
   AddCollection,
   DeleteCollection, GetCollectionsForUser,
-  ListenForCollections,
-  StopListeningForCollections,
+  ListenForCollections, ListenForCollectionsForUser,
+  StopListeningForCollections, StopListeningForCollectionsForUser,
   UpdateCollection,
   UpdateCollectionsStore
 } from './collections.actions';
@@ -51,21 +51,21 @@ export class CollectionState {
 
   @Action(AddCollection)
   AddCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
-    this.collectionsService.createCollection(action.collection);
+    this.collectionsService.createCollection(action.collection, action.Userid);
 
 
   }
 
   @Action(UpdateCollection)
   UpdateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
-    this.collectionsService.updateCollection(action.collection);
+    this.collectionsService.updateCollection(action.collection, action.Userid);
 
 
   }
 
   @Action(DeleteCollection)
   DeleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
-    this.collectionsService.deleteCollection(action.collectionId);
+    this.collectionsService.deleteCollection(action.collectionId, action.Userid);
 
 
   }
@@ -84,6 +84,21 @@ export class CollectionState {
   getCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: GetCollectionsForUser): void{
     this.collectionsService.getCollectionsForUser(action.Userid);
 
+  }
+
+  @Action(ListenForCollectionsForUser)
+  ListenForCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: ListenForCollectionsForUser): void {
+    this.initSub = this.collectionsService.listenForAllCollectionsForUser()
+        .subscribe(collections => {
+          ctx.dispatch(new UpdateCollectionsStore(collections));
+        });
+  }
+
+  @Action(StopListeningForCollectionsForUser)
+  StopListeningForCollectionsForUser(ctx: StateContext<CollectionsStateModel>): void {
+    if (this.initSub) {
+      this.initSub.unsubscribe();
+    }
   }
 
 }

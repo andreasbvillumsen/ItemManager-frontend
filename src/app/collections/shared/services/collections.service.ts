@@ -74,22 +74,22 @@ export class CollectionsService {
 
   }
 
-  createCollection(collection: CollectionModel): void {
+  createCollection(collection: CollectionModel, Userid: number ): void {
     const createCollectionDto: CreateCollectionDto = {name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('createCollection', createCollectionDto);
+    this.socket.emit('createCollection', createCollectionDto, Userid);
   }
 
-  updateCollection(collection: CollectionModel): void {
+  updateCollection(collection: CollectionModel, Userid: number): void {
     const updateCollectionDto: UpdateCollectionDto = {id: collection.id ,
       name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('updateCollection', updateCollectionDto);
+    this.socket.emit('updateCollection', updateCollectionDto, Userid);
   }
 
-  deleteCollection(collectionId: number): void {
-    this.socket.emit('deleteCollection', collectionId);
+  deleteCollection(collectionId: number, Userid: number): void {
+    this.socket.emit('deleteCollection', collectionId, Userid);
 }
   getCollectionsForUser(Userid: number): void {
-    this.socket.emit('getCollectionsForUser', Userid);
+    this.socket.emit('findAllCollectionsByUserID', Userid);
   }
 
 }

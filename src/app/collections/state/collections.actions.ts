@@ -10,21 +10,21 @@ export class StopListeningForCollections {
 }
 
 export class AddCollection {
-  constructor(public collection: CollectionModel) {}
+  constructor(public collection: CollectionModel, public Userid: number) {}
 
   static readonly type = '[collection] add collection';
 
 }
 
 export class UpdateCollection {
-  constructor(public collection: CollectionModel) {}
+  constructor(public collection: CollectionModel, public Userid: number) {}
 
   static readonly type = '[collection] Update collection';
 
 }
 
 export class DeleteCollection {
-  constructor(public collectionId: number) {}
+  constructor(public collectionId: number, public Userid: number) {}
 
   static readonly type = '[collection] delete collection';
 
@@ -41,6 +41,14 @@ export class GetCollectionsForUser{
   constructor(public Userid: number){}
 
   static readonly type = '[collection] get collections for user';
+}
+
+export class ListenForCollectionsForUser {
+  static readonly type = '[collection] listen for collections for user';
+}
+
+export class StopListeningForCollectionsForUser {
+  static readonly type = '[collection] Stop listening for collections';
 }
 
 
