@@ -79,17 +79,17 @@ export class CollectionsService {
     this.socket.emit('createCollection', createCollectionDto, Userid);
   }
 
-  updateCollection(collection: CollectionModel, Userid: number): void {
+  updateCollection(collection: CollectionModel, userid: number): void {
     const updateCollectionDto: UpdateCollectionDto = {id: collection.id ,
       name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('updateCollection', updateCollectionDto, Userid);
+    this.socket.emit('updateCollection', updateCollectionDto, userid);
   }
 
-  deleteCollection(collectionId: number, Userid: number): void {
-    this.socket.emit('deleteCollection', collectionId, Userid);
+  deleteCollection(collectionId: number, userid: number): void {
+    this.socket.emit('deleteCollection', collectionId, userid);
 }
-  getCollectionsForUser(Userid: number): void {
-    this.socket.emit('findAllCollectionsByUserID', Userid);
+  getCollectionsForUser(userid: number): void {
+    this.socket.emit('findAllCollectionsByUserID', userid);
   }
 
 }
