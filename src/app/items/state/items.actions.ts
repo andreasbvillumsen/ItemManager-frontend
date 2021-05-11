@@ -5,8 +5,8 @@ export class ListenForItems {
   static readonly type = '[item] Listen for items';
 }
 
-export class StopListeningForItems {
-  static readonly type = '[item] Stop listening for items';
+export class StopListening {
+  static readonly type = '[item] Stop listening';
 }
 
 export class AddItem {
@@ -41,6 +41,19 @@ export class ItemsInCollection {
   constructor(public collectionId: number) {}
 
     static readonly type = '[item] get items in collection';
+
+}
+
+export class ListenForErrors {
+
+  static readonly type = '[item] Listen for errors';
+
+}
+
+export class UpdateError {
+  constructor(public errorMessage: string) {}
+
+  static readonly type = '[item] Update errorMessage';
 
 }
 

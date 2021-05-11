@@ -109,6 +109,9 @@
       <!-- Dummy element to force sidebar to shrink to fit close icon -->
     </div>
   </div>
+  <div *ngIf="errorMessage">
+    <p style="color: darkred">{{errorMessage}}</p>
+  </div>
 
   <!-- Static sidebar for desktop -->
   <div class="hidden md:flex md:flex-shrink-0" >
@@ -312,6 +315,9 @@
               <!-- More people... -->
             </ul>
 
+          </div>
+          <div *ngIf="errorMessage">
+            <p style="color: darkred">{{errorMessage}}</p>
           </div>
           <!-- /End replace -->
         </div>

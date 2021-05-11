@@ -5,8 +5,8 @@ export class ListenForCollections {
   static readonly type = '[collection] Listen for collections';
 }
 
-export class StopListeningForCollections {
-  static readonly type = '[collection] Stop listening for collections';
+export class StopListening {
+  static readonly type = '[collection] Stop listening';
 }
 
 export class AddCollection {
@@ -47,8 +47,17 @@ export class ListenForCollectionsForUser {
   static readonly type = '[collection] listen for collections for user';
 }
 
-export class StopListeningForCollectionsForUser {
-  static readonly type = '[collection] Stop listening for collections';
+export class ListenForErrors {
+
+  static readonly type = '[collection] Listen for errors';
+
+}
+
+export class UpdateError {
+  constructor(public errorMessage: string) {}
+
+  static readonly type = '[collection] Update errorMessage';
+
 }
 
 
