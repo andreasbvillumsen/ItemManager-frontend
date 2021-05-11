@@ -7,6 +7,7 @@ import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {GetCollectionsForUser, ListenForCollectionsForUser, StopListeningForCollectionsForUser} from './state/collections.actions';
 import {take} from 'rxjs/operators';
+import {CollectionsService} from './shared/services/collections.service';
 
 @Component({
   selector: 'app-collections',
@@ -18,14 +19,17 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   collections$: Observable<CollectionModel[]>;
   auth$: Observable<AuthModel>;
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private collectionsService: CollectionsService) { }
 
   ngOnInit(): void {
+    this.collectionsService.getCollectionsForUser(1);
     this.store.dispatch(new ListenForCollectionsForUser());
+
     this.auth$ = this.store.select(AuthState.auth);
     this.auth$.pipe(take(1)).subscribe(auth => {
       this.store.dispatch(new GetCollectionsForUser(auth.user.id));
     });
+
   }
 
   getAuth(): Observable<AuthModel> {

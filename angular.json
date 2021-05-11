@@ -66,12 +66,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "ItemManager:build",
-            "port": 4100
+            "port": 4200
           },
           "configurations": {
             "production": {
               "browserTarget": "ItemManager:build:production",
-              "port": 4100
+              "port": 4200
             }
           }
         },

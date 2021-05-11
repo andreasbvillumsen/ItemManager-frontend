@@ -56,6 +56,7 @@ export class CollectionsService {
             users: new Array<UserModel>()
 
           })))
+
       );
 
   }
@@ -89,7 +90,17 @@ export class CollectionsService {
     this.socket.emit('deleteCollection', collectionId, userid);
 }
   getCollectionsForUser(userid: number): void {
+    console.log('send findAllCollectionsByUserID');
     this.socket.emit('findAllCollectionsByUserID', userid);
+  }
+
+  disconnect(): void {
+    console.log('Disconnected');
+    this.socket.disconnect();
+  }
+  connect(): void {
+    console.log('connected');
+    this.socket.connect();
   }
 
 }
