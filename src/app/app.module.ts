@@ -9,6 +9,10 @@ import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import {NgxsModule} from '@ngxs/store';
 import { AuthComponent } from './auth/auth.component';
 import {NgxsStoragePluginModule} from '@ngxs/storage-plugin';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { ItemsShowComponent } from './items/items-show/items-show.component';
 
 
 @Injectable()
@@ -22,7 +26,11 @@ export class SocketItemManager extends Socket {
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent
+    AuthComponent,
+    LandingPageComponent,
+    LoginComponent,
+    RegisterComponent,
+    ItemsShowComponent,
   ],
   imports: [
     BrowserModule,
