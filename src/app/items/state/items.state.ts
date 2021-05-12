@@ -1,30 +1,33 @@
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {ItemModel} from '../shared/models/ItemModel';
 import {ItemsService} from '../shared/services/items.service';
 import {
-  AddItem,
-  DeleteItem, ItemsInCollection,
-  ListenForItems,
-  StopListeningForItems,
+  AddItem, ClearError,
+  DeleteItem, GetAllItems, ItemsInCollection, ListenForErrors,
+  ListenForItems, ListenForItemsInCollection, StopListening, UpdateError,
   UpdateItem,
   UpdateItemsStore
 } from './items.actions';
+import {takeUntil} from 'rxjs/operators';
+import {UsersStateModel} from '../../users/state/users.state';
 
 export interface ItemsStateModel{
   items: ItemModel[];
+  errorMessage: string;
 }
 
 @State<ItemsStateModel>({
   name: 'item',
   defaults: {
-    items: []
+    items: [],
+    errorMessage: undefined
   }
 })
 @Injectable()
 export class ItemState {
-  initSub: Subscription | undefined;
+  unsubscriber$ = new Subject();
 
   constructor(private itemService: ItemsService) {
   }
@@ -34,19 +37,43 @@ export class ItemState {
     return state.items;
   }
 
+  @Selector()
+  static error(state: UsersStateModel): string {
+    return state.errorMessage;
+  }
+
+  @Action(ClearError)
+  clearError(ctx: StateContext<ItemsStateModel>): void {
+    const state = ctx.getState();
+    const newState: ItemsStateModel = {
+      ...state,
+      errorMessage: undefined
+    };
+    ctx.setState(newState);
+  }
+
   @Action(ListenForItems)
   listenForItems(ctx: StateContext<ItemsStateModel>): void {
-    this.initSub = this.itemService.listenForItems()
+     this.itemService.listenForItems()
+         .pipe(takeUntil(this.unsubscriber$))
       .subscribe(items => {
         ctx.dispatch(new UpdateItemsStore(items));
       });
   }
 
-  @Action(StopListeningForItems)
-  stopListeningForItems(ctx: StateContext<ItemsStateModel>): void {
-    if (this.initSub) {
-      this.initSub.unsubscribe();
-    }
+  @Action(ListenForItemsInCollection)
+  listenForItemsInCollection(ctx: StateContext<ItemsStateModel>): void {
+    this.itemService.listenForItems()
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(items => {
+        ctx.dispatch(new UpdateItemsStore(items));
+      });
+  }
+
+  @Action(StopListening)
+  stopListening(ctx: StateContext<ItemsStateModel>): void {
+    this.unsubscriber$.next();
+    this.unsubscriber$.complete();
   }
 
   @Action(AddItem)
@@ -80,6 +107,27 @@ export class ItemState {
     const newState: ItemsStateModel = {
       ...state,
       items: action.items
+    };
+    ctx.setState(newState);
+  }
+
+  @Action(ListenForErrors)
+  listenForErrors(ctx: StateContext<ItemsStateModel>): void {
+    this.itemService.listenForErrors()
+        .pipe(
+            takeUntil(this.unsubscriber$)
+        )
+        .subscribe(error => {
+          ctx.dispatch(new UpdateError(error));
+        });
+  }
+
+  @Action(UpdateError)
+  updateError(ctx: StateContext<ItemsStateModel>, action: UpdateError): void {
+    const state = ctx.getState();
+    const newState: ItemsStateModel = {
+      ...state,
+      errorMessage: action.errorMessage
     };
     ctx.setState(newState);
   }

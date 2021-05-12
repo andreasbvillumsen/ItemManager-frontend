@@ -1,30 +1,32 @@
 import {CollectionModel} from '../shared/models/CollectionModel';
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
-  AddCollection,
-  DeleteCollection, GetCollectionsForUser,
-  ListenForCollections,
-  StopListeningForCollections,
+  AddCollection, ClearError,
+  DeleteCollection, GetAllCollections, GetCollectionsForUser,
+  ListenForCollections, ListenForCollectionsForUser, ListenForErrors, StopListening,
   UpdateCollection,
-  UpdateCollectionsStore
+  UpdateCollectionsStore, UpdateError
 } from './collections.actions';
+import {takeUntil} from 'rxjs/operators';
 
 export interface CollectionsStateModel{
   Collections: CollectionModel[];
+  errorMessage: string;
 }
 
 @State<CollectionsStateModel>({
   name: 'collection',
   defaults: {
-    Collections: []
+    Collections: [],
+    errorMessage: undefined
   }
 })
 @Injectable()
 export class CollectionState {
-  initSub: Subscription | undefined;
+  unsubscriber$ = new Subject();
 
   constructor(private collectionsService: CollectionsService) {
   }
@@ -34,38 +36,43 @@ export class CollectionState {
     return state.Collections;
   }
 
+  @Selector()
+  static error(state: CollectionsStateModel): string {
+    return state.errorMessage;
+  }
+
   @Action(ListenForCollections)
   listenForCollections(ctx: StateContext<CollectionsStateModel>): void {
-    this.initSub = this.collectionsService.listenForCollections()
+    this.collectionsService.listenForCollections()
+        .pipe(takeUntil(this.unsubscriber$))
       .subscribe(collections => {
         ctx.dispatch(new UpdateCollectionsStore(collections));
       });
   }
 
-  @Action(StopListeningForCollections)
-  stopListeningForClients(ctx: StateContext<CollectionsStateModel>): void {
-    if (this.initSub) {
-      this.initSub.unsubscribe();
-    }
+  @Action(StopListening)
+  stopListening(ctx: StateContext<CollectionsStateModel>): void {
+    this.unsubscriber$.next();
+    this.unsubscriber$.complete();
   }
 
   @Action(AddCollection)
-  AddCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
-    this.collectionsService.createCollection(action.collection);
+  addCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
+    this.collectionsService.createCollection(action.collection, action.Userid);
 
 
   }
 
   @Action(UpdateCollection)
-  UpdateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
-    this.collectionsService.updateCollection(action.collection);
+  updateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
+    this.collectionsService.updateCollection(action.collection, action.Userid);
 
 
   }
 
   @Action(DeleteCollection)
-  DeleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
-    this.collectionsService.deleteCollection(action.collectionId);
+  deleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
+    this.collectionsService.deleteCollection(action.collectionId, action.Userid);
 
 
   }
@@ -84,6 +91,52 @@ export class CollectionState {
   getCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: GetCollectionsForUser): void{
     this.collectionsService.getCollectionsForUser(action.Userid);
 
+  }
+
+  @Action(GetAllCollections)
+  getAllCollections(ctx: StateContext<CollectionsStateModel>): void{
+    this.collectionsService.getAllCollections();
+
+  }
+
+  @Action(ListenForCollectionsForUser)
+  listenForCollectionsForUser(ctx: StateContext<CollectionsStateModel>, action: ListenForCollectionsForUser): void {
+    this.collectionsService.listenForAllCollectionsForUser()
+        .pipe(takeUntil(this.unsubscriber$))
+        .subscribe(collections => {
+          ctx.dispatch(new UpdateCollectionsStore(collections));
+        });
+  }
+
+  @Action(ListenForErrors)
+  listenForErrors(ctx: StateContext<CollectionsStateModel>): void {
+    this.collectionsService.listenForErrors()
+        .pipe(
+            takeUntil(this.unsubscriber$)
+        )
+        .subscribe(error => {
+          ctx.dispatch(new UpdateError(error));
+        });
+  }
+
+  @Action(ClearError)
+  clearError(ctx: StateContext<CollectionsStateModel>): void {
+    const state = ctx.getState();
+    const newState: CollectionsStateModel = {
+      ...state,
+      errorMessage: undefined
+    };
+    ctx.setState(newState);
+  }
+
+  @Action(UpdateError)
+  updateError(ctx: StateContext<CollectionsStateModel>, action: UpdateError): void {
+    const state = ctx.getState();
+    const newState: CollectionsStateModel = {
+      ...state,
+      errorMessage: action.errorMessage
+    };
+    ctx.setState(newState);
   }
 
 }

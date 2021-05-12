@@ -27,4 +27,27 @@ export class DeleteUser {
 
 }
 
+export class StopListening {
+
+  static readonly type = '[ReadUserDto] stop listening';
+
+}
+
+export class ClearError{
+  static readonly type = '[collection] clear error';
+}
+
+export class ListenForErrors {
+
+  static readonly type = '[ReadUserDto] Listen for errors';
+
+}
+
+export class UpdateError {
+  constructor(public errorMessage: string) {}
+
+  static readonly type = '[ReadUserDto] Update errorMessage';
+
+}
+
 

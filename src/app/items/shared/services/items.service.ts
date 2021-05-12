@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {SocketItemManager} from '../../../app.module';
 import {Observable} from 'rxjs';
 import {ItemModel} from '../models/ItemModel';
 import {ReadItemDto} from '../dtos/read-item.dto';
@@ -8,13 +7,14 @@ import {map, tap} from 'rxjs/operators';
 import {CollectionModel} from '../../../collections/shared/models/CollectionModel';
 import {CreateItemDto} from '../dtos/create-item.dto';
 import {UpdateItemDto} from '../dtos/update-item.dto';
+import {Socket} from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
 
-  constructor(private socket: SocketItemManager) { }
+  constructor(private socket: Socket) { }
 
   listenForItems(): Observable<ItemModel[]>{
     return this.socket
@@ -45,6 +45,12 @@ export class ItemsService {
 
   getItemsInCollection(collectionId: number): void {
     this.socket.emit('getItemsInCollection', collectionId);
+    console.log('emited getItemsInCollection');
+  }
+
+  listenForErrors(): Observable<string>{
+    return this.socket
+        .fromEvent<string>('error');
   }
 
 }

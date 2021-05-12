@@ -65,11 +65,13 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ItemManager:build"
+            "browserTarget": "ItemManager:build",
+            "port": 4200
           },
           "configurations": {
             "production": {
-              "browserTarget": "ItemManager:build:production"
+              "browserTarget": "ItemManager:build:production",
+              "port": 4200
             }
           }
         },

@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { CollectionsRoutingModule } from './collections-routing.module';
 import { CollectionsComponent } from './collections.component';
+import {CollectionState} from './state/collections.state';
+import {NgxsModule} from '@ngxs/store';
+import {ItemsModule} from '../items/items.module';
+import {ItemState} from '../items/state/items.state';
 
 
 
@@ -12,7 +16,9 @@ import { CollectionsComponent } from './collections.component';
   ],
   imports: [
     CommonModule,
-    CollectionsRoutingModule
+    CollectionsRoutingModule,
+    NgxsModule.forFeature([CollectionState, ItemState]),
+    ItemsModule
   ]
 })
 export class CollectionsModule { }

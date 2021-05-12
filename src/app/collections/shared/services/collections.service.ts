@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {SocketItemManager} from '../../../app.module';
 import {Observable} from 'rxjs';
 import {CollectionModel} from '../models/CollectionModel';
 import {ReadCollectionDto} from '../dtos/read-collection.dto';
@@ -9,16 +8,17 @@ import {UserModel} from '../../../users/shared/models/UserModel';
 import {CreateItemDto} from '../../../items/shared/dtos/create-item.dto';
 import {CreateCollectionDto} from '../dtos/create-collection.dto';
 import {UpdateCollectionDto} from '../dtos/update-collection.dto';
+import {Socket} from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollectionsService {
 
-  constructor(private socket: SocketItemManager) { }
+  constructor(private socket: Socket) { }
 
   listenForCollections(): Observable<CollectionModel[]>{
-    return this.socket
+      return this.socket
       .fromEvent<ReadCollectionDto[]>('allCollections').pipe(
         map((readCollectionDtos: ReadCollectionDto[] ) =>
         readCollectionDtos.map(readCollectionDto => ({
@@ -29,6 +29,7 @@ export class CollectionsService {
 
         })))
       );
+
 
 
 /*
@@ -56,6 +57,7 @@ export class CollectionsService {
             users: new Array<UserModel>()
 
           })))
+
       );
 
   }
@@ -74,22 +76,39 @@ export class CollectionsService {
 
   }
 
-  createCollection(collection: CollectionModel): void {
+  createCollection(collection: CollectionModel, Userid: number ): void {
     const createCollectionDto: CreateCollectionDto = {name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('createCollection', createCollectionDto);
+    this.socket.emit('createCollection', createCollectionDto, Userid);
   }
 
-  updateCollection(collection: CollectionModel): void {
+  updateCollection(collection: CollectionModel, userid: number): void {
     const updateCollectionDto: UpdateCollectionDto = {id: collection.id ,
       name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('updateCollection', updateCollectionDto);
+    this.socket.emit('updateCollection', updateCollectionDto, userid);
   }
 
-  deleteCollection(collectionId: number): void {
-    this.socket.emit('deleteCollection', collectionId);
-}
-  getCollectionsForUser(Userid: number): void {
-    this.socket.emit('getCollectionsForUser', Userid);
+  deleteCollection(collectionId: number, userid: number): void {
+    this.socket.emit('deleteCollection', collectionId, userid);
+ }
+  getCollectionsForUser(userid: number): void {
+      this.socket.emit('findAllCollectionsByUserID', userid);
+  }
+  getAllCollections(): void {
+      this.socket.emit('findAllCollections');
+  }
+
+  listenForErrors(): Observable<string>{
+      return this.socket
+          .fromEvent<string>('error');
+  }
+
+  disconnect(): void {
+    console.log('Disconnected');
+    this.socket.disconnect();
+  }
+  connect(): void {
+    console.log('connected');
+    this.socket.connect();
   }
 
 }
