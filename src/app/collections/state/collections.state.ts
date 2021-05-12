@@ -94,8 +94,8 @@ export class CollectionState {
   }
 
   @Action(GetAllCollections)
-  getAllCollections(ctx: StateContext<CollectionsStateModel>, action: GetCollectionsForUser): void{
-    this.collectionsService.getCollectionsForUser(action.Userid);
+  getAllCollections(ctx: StateContext<CollectionsStateModel>): void{
+    this.collectionsService.getAllCollections();
 
   }
 

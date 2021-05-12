@@ -96,6 +96,7 @@ export class CollectionsService {
   getAllCollections(): void {
       this.socket.emit('findAllCollections');
   }
+
   listenForErrors(): Observable<string>{
       return this.socket
           .fromEvent<string>('error');

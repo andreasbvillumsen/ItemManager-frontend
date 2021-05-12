@@ -23,6 +23,10 @@ export class UpdateItem {
 
 }
 
+export class GetAllItems{
+  static readonly type = '[item] get all Items';
+}
+
 export class DeleteItem {
   constructor(public itemId: number) {}
 

@@ -6,6 +6,7 @@ import {Observable, Subject} from 'rxjs';
 import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {
+  GetAllCollections,
   GetCollectionsForUser,
   ListenForCollections,
   ListenForCollectionsForUser, ListenForErrors, StopListening,
@@ -27,26 +28,21 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   collections$: Observable<CollectionModel[]>;
   auth$: Observable<AuthModel>;
 
-  constructor(private store: Store, private  collectionsService: CollectionsService) { }
+  constructor(private store: Store) { }
 
   ngOnInit(): void {
-    /*
-    this.store.dispatch(new ListenForCollectionsForUser());
 
+    this.store.dispatch(new ListenForCollectionsForUser());
     this.auth$ = this.store.select(AuthState.auth);
     this.auth$.pipe(take(1)).subscribe(auth => {
        this.store.dispatch(new GetCollectionsForUser(auth.user.id));
-    });*/
-
-
+    });
     this.store.dispatch(new ListenForErrors());
     this.errorMessage$
         .pipe(takeUntil(this.unsubscriber$))
         .subscribe(error => {
           this.errorMessage = error;
         });
-    this.store.dispatch(new ListenForCollections());
-    this.collectionsService.getAllCollections();
 
   }
 
