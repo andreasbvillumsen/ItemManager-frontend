@@ -14,6 +14,9 @@ import {
 } from './state/collections.actions';
 import {take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
+import {ItemState} from '../items/state/items.state';
+import {ItemModel} from '../items/shared/models/ItemModel';
+import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
 
 @Component({
   selector: 'app-collections',
@@ -28,12 +31,17 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @Select(CollectionState.Collections)
   collections$: Observable<CollectionModel[]>;
   auth$: Observable<AuthModel>;
+  @Select(ItemState.items)
+  items$: Observable<ItemModel[]>;
+
+  currentCollection: CollectionModel | undefined;
 
   constructor(private store: Store) { }
 
   ngOnInit(): void {
 
     this.store.dispatch(new ListenForCollectionsForUser());
+    this.store.dispatch(new ListenForItems());
     this.auth$ = this.store.select(AuthState.auth);
     this.auth$.pipe(take(1)).subscribe(auth => {
        this.store.dispatch(new GetCollectionsForUser(auth.user.id));
@@ -46,10 +54,17 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.errorMessage = error;
         });
 
+
+
   }
 
   getAuth(): Observable<AuthModel> {
     return this.store.select(AuthState.auth);
+  }
+
+  selectCollection(collection: CollectionModel): void{
+    this.currentCollection = collection;
+    this.store.dispatch(new ItemsInCollection(collection.id));
   }
 
   ngOnDestroy(): void {

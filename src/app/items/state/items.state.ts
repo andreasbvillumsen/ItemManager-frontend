@@ -6,7 +6,7 @@ import {ItemsService} from '../shared/services/items.service';
 import {
   AddItem, ClearError,
   DeleteItem, GetAllItems, ItemsInCollection, ListenForErrors,
-  ListenForItems, StopListening, UpdateError,
+  ListenForItems, ListenForItemsInCollection, StopListening, UpdateError,
   UpdateItem,
   UpdateItemsStore
 } from './items.actions';
@@ -56,6 +56,15 @@ export class ItemState {
   listenForItems(ctx: StateContext<ItemsStateModel>): void {
      this.itemService.listenForItems()
          .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(items => {
+        ctx.dispatch(new UpdateItemsStore(items));
+      });
+  }
+
+  @Action(ListenForItemsInCollection)
+  listenForItemsInCollection(ctx: StateContext<ItemsStateModel>): void {
+    this.itemService.listenForItems()
+      .pipe(takeUntil(this.unsubscriber$))
       .subscribe(items => {
         ctx.dispatch(new UpdateItemsStore(items));
       });

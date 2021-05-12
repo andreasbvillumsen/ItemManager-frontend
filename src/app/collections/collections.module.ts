@@ -5,6 +5,8 @@ import { CollectionsRoutingModule } from './collections-routing.module';
 import { CollectionsComponent } from './collections.component';
 import {CollectionState} from './state/collections.state';
 import {NgxsModule} from '@ngxs/store';
+import {ItemsModule} from '../items/items.module';
+import {ItemState} from '../items/state/items.state';
 
 
 
@@ -15,7 +17,8 @@ import {NgxsModule} from '@ngxs/store';
   imports: [
     CommonModule,
     CollectionsRoutingModule,
-    NgxsModule.forFeature([CollectionState])
+    NgxsModule.forFeature([CollectionState, ItemState]),
+    ItemsModule
   ]
 })
 export class CollectionsModule { }

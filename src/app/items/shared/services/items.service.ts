@@ -45,6 +45,7 @@ export class ItemsService {
 
   getItemsInCollection(collectionId: number): void {
     this.socket.emit('getItemsInCollection', collectionId);
+    console.log('emited getItemsInCollection');
   }
 
   listenForErrors(): Observable<string>{

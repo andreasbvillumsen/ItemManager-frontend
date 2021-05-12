@@ -9,6 +9,11 @@ export class StopListening {
   static readonly type = '[item] Stop listening';
 }
 
+export class ListenForItemsInCollection {
+  static readonly type = '[item] Listen for items in Collection';
+}
+
+
 export class AddItem {
   constructor(public item: ItemModel) {}
 
