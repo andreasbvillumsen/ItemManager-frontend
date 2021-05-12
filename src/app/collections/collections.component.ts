@@ -11,6 +11,7 @@ import {
   ListenForCollectionsForUser, ListenForErrors, StopListening,
 } from './state/collections.actions';
 import {take, takeUntil} from 'rxjs/operators';
+import {CollectionsService} from './shared/services/collections.service';
 
 @Component({
   selector: 'app-collections',
@@ -26,7 +27,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   collections$: Observable<CollectionModel[]>;
   auth$: Observable<AuthModel>;
 
-  constructor(private store: Store, private collectionsService: CollectionsService) { }
+  constructor(private store: Store, private  collectionsService: CollectionsService) { }
 
   ngOnInit(): void {
     /*
@@ -36,6 +37,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.auth$.pipe(take(1)).subscribe(auth => {
        this.store.dispatch(new GetCollectionsForUser(auth.user.id));
     });*/
+
+
     this.store.dispatch(new ListenForErrors());
     this.errorMessage$
         .pipe(takeUntil(this.unsubscriber$))
@@ -43,7 +46,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.errorMessage = error;
         });
     this.store.dispatch(new ListenForCollections());
-
+    this.collectionsService.getAllCollections();
 
   }
 
