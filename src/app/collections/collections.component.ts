@@ -51,6 +51,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.unsubscriber$.next();
+    this.unsubscriber$.complete();
     this.store.dispatch(new StopListening());
   }
 
