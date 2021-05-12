@@ -4,7 +4,7 @@ import {Subject, Subscription} from 'rxjs';
 import {ItemModel} from '../shared/models/ItemModel';
 import {ItemsService} from '../shared/services/items.service';
 import {
-  AddItem,
+  AddItem, ClearError,
   DeleteItem, GetAllItems, ItemsInCollection, ListenForErrors,
   ListenForItems, StopListening, UpdateError,
   UpdateItem,
@@ -12,8 +12,6 @@ import {
 } from './items.actions';
 import {takeUntil} from 'rxjs/operators';
 import {UsersStateModel} from '../../users/state/users.state';
-import {GetAllCollections, GetCollectionsForUser} from '../../collections/state/collections.actions';
-import {CollectionsStateModel} from '../../collections/state/collections.state';
 
 export interface ItemsStateModel{
   items: ItemModel[];
@@ -42,6 +40,16 @@ export class ItemState {
   @Selector()
   static error(state: UsersStateModel): string {
     return state.errorMessage;
+  }
+
+  @Action(ClearError)
+  clearError(ctx: StateContext<ItemsStateModel>): void {
+    const state = ctx.getState();
+    const newState: ItemsStateModel = {
+      ...state,
+      errorMessage: undefined
+    };
+    ctx.setState(newState);
   }
 
   @Action(ListenForItems)

@@ -41,6 +41,10 @@ export class UpdateItemsStore {
 
 }
 
+export class ClearError{
+  static readonly type = '[collection] clear error';
+}
+
 export class ItemsInCollection {
   constructor(public collectionId: number) {}
 

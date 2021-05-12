@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
-  AddCollection,
+  AddCollection, ClearError,
   DeleteCollection, GetAllCollections, GetCollectionsForUser,
   ListenForCollections, ListenForCollectionsForUser, ListenForErrors, StopListening,
   UpdateCollection,
@@ -117,6 +117,16 @@ export class CollectionState {
         .subscribe(error => {
           ctx.dispatch(new UpdateError(error));
         });
+  }
+
+  @Action(ClearError)
+  clearError(ctx: StateContext<CollectionsStateModel>): void {
+    const state = ctx.getState();
+    const newState: CollectionsStateModel = {
+      ...state,
+      errorMessage: undefined
+    };
+    ctx.setState(newState);
   }
 
   @Action(UpdateError)

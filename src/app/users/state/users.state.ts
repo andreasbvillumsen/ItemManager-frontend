@@ -3,10 +3,7 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {UsersService} from '../shared/services/users.service';
-import {CollectionsStateModel} from '../../collections/state/collections.state';
-import {CollectionModel} from '../../collections/shared/models/CollectionModel';
-import {CreateUser, DeleteUser, ListenForErrors, StopListening, UpdateError, UpdateUser} from './users.actions';
-import {ItemsStateModel} from '../../items/state/items.state';
+import {ClearError, CreateUser, DeleteUser, ListenForErrors, StopListening, UpdateError, UpdateUser} from './users.actions';
 import {takeUntil} from 'rxjs/operators';
 
 export interface UsersStateModel{
@@ -36,6 +33,16 @@ export class UsersState{
   @Selector()
   static error(state: UsersStateModel): string {
     return state.errorMessage;
+  }
+
+  @Action(ClearError)
+  clearError(ctx: StateContext<UsersStateModel>): void {
+    const state = ctx.getState();
+    const newState: UsersStateModel = {
+      ...state,
+      errorMessage: undefined
+    };
+    ctx.setState(newState);
   }
 
   @Action(CreateUser)

@@ -43,6 +43,10 @@ export class GetCollectionsForUser{
   static readonly type = '[collection] get collections for user';
 }
 
+export class ClearError{
+  static readonly type = '[collection] clear error';
+}
+
 export class GetAllCollections{
   static readonly type = '[collection] get all collections';
 }

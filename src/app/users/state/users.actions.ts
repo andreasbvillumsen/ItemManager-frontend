@@ -33,6 +33,10 @@ export class StopListening {
 
 }
 
+export class ClearError{
+  static readonly type = '[collection] clear error';
+}
+
 export class ListenForErrors {
 
   static readonly type = '[ReadUserDto] Listen for errors';

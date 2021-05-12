@@ -6,6 +6,7 @@ import {Observable, Subject} from 'rxjs';
 import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {
+  ClearError,
   GetAllCollections,
   GetCollectionsForUser,
   ListenForCollections,
@@ -41,6 +42,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.errorMessage$
         .pipe(takeUntil(this.unsubscriber$))
         .subscribe(error => {
+          this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
 
