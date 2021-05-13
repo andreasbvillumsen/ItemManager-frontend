@@ -191,7 +191,7 @@
           <div class="py-4">
             <!-- This example requires Tailwind CSS v2.0+ -->
             <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" *ngIf="items$ | async as itemModels">
-              <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200" *ngFor="let item of itemModels">
+              <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200" *ngFor="let item of itemModels" routerLink="/items/show/{{item.id}}">
                 <!-- This example requires Tailwind CSS v2.0+ -->
                 <div class="sm:flex">
                   <div class="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4">
