@@ -97,8 +97,8 @@
             <div *ngIf="newCollection">
               <form class="form" [formGroup]="collectionCreateFG" (ngSubmit)="createCollection()">
                 <div class="form-spacing">
-                  <input class="input-title" type="text" placeholder="Collection" aria-label="Full name">
-                  <button class="btn-create" type="button">
+                  <input class="input-title" required type="text" placeholder="Collection" aria-label="Full name" formControlName="nameFC">
+                  <button class="btn-create" type="submit">
                     create
                   </button>
                   <button class="btn-cancel" type="button" (click)="newCollection = false">
@@ -106,6 +106,9 @@
                   </button>
                 </div>
               </form>
+              <div *ngIf="nameFC.invalid && submitted" class="warn-text-color">
+                <div *ngIf="nameFC.errors.required">name is required</div>
+              </div>
 
             </div>
             <div>

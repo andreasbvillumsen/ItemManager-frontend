@@ -1,4 +1,6 @@
 import {CollectionModel} from '../shared/models/CollectionModel';
+import {CreateCollectionDto} from '../shared/dtos/create-collection.dto';
+import {UpdateCollectionDto} from '../shared/dtos/update-collection.dto';
 
 
 export class ListenForCollections {
@@ -10,14 +12,14 @@ export class StopListening {
 }
 
 export class AddCollection {
-  constructor(public collection: CollectionModel, public Userid: number) {}
+  constructor(public collectionDto: CreateCollectionDto) {}
 
   static readonly type = '[collection] add collection';
 
 }
 
 export class UpdateCollection {
-  constructor(public collection: CollectionModel, public Userid: number) {}
+  constructor(public collection: UpdateCollectionDto) {}
 
   static readonly type = '[collection] Update collection';
 

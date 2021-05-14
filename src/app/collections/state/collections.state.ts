@@ -58,14 +58,14 @@ export class CollectionState {
 
   @Action(AddCollection)
   addCollection(ctx: StateContext<CollectionsStateModel> , action: AddCollection): void {
-    this.collectionsService.createCollection(action.collection, action.Userid);
+    this.collectionsService.createCollection(action.collectionDto);
 
 
   }
 
   @Action(UpdateCollection)
   updateCollection(ctx: StateContext<CollectionsStateModel> , action: UpdateCollection): void {
-    this.collectionsService.updateCollection(action.collection, action.Userid);
+    this.collectionsService.updateCollection(action.collection);
 
 
   }
