@@ -27,6 +27,10 @@
   @apply appearance-none bg-transparent border-none w-full text-gray-100 mr-3 py-1 px-2 leading-tight focus:outline-none;
 }
 
+.input-edit-title{
+  @apply appearance-none bg-transparent border-none w-full text-gray-900 mr-3 py-1 px-2 leading-tight focus:outline-none;
+}
+
 .form-spacing{
   @apply flex items-center border-b border-blue-500 py-2;
 }
@@ -38,3 +42,4 @@
 .warn-text-color{
   @apply text-red-500;
 }
+

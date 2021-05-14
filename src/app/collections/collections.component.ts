@@ -11,7 +11,7 @@ import {
   GetAllCollections,
   GetCollectionsForUser,
   ListenForCollections,
-  ListenForCollectionsForUser, ListenForErrors, StopListening,
+  ListenForCollectionsForUser, ListenForErrors, StopListening, UpdateCollection,
 } from './state/collections.actions';
 import {take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
@@ -20,6 +20,7 @@ import {ItemModel} from '../items/shared/models/ItemModel';
 import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
+import {UpdateCollectionDto} from './shared/dtos/update-collection.dto';
 
 @Component({
   selector: 'app-collections',
@@ -37,18 +38,28 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @Select(ItemState.items)
   items$: Observable<ItemModel[]>;
   newCollection: boolean;
-  submitted: boolean;
+  submittedCreate: boolean;
+  submittedEdit: boolean;
+  editCollection: boolean;
   collectionCreateFG = new FormGroup({
-    nameFC: new FormControl('', Validators.required)
+    nameCreateFC: new FormControl('', Validators.required)
+  });
+  collectionEditFG = new FormGroup({
+    nameEditFC: new FormControl('', Validators.required)
   });
 
   currentCollection: CollectionModel | undefined;
 
   constructor(private store: Store) { }
 
-  get nameFC(): AbstractControl{
-    return this.collectionCreateFG.get('nameFC');
+  get nameCreateFC(): AbstractControl{
+    return this.collectionCreateFG.get('nameCreateFC');
   }
+
+  get nameEditFC(): AbstractControl{
+    return this.collectionEditFG.get('nameEditFC');
+  }
+
   ngOnInit(): void {
 
     this.store.dispatch(new ListenForCollectionsForUser());
@@ -65,10 +76,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.errorMessage = error;
         });
     this.newCollection = false;
-    this.submitted = false;
-
-
-
+    this.submittedCreate = false;
+    this.editCollection = false;
+    this.submittedEdit = false;
   }
 
   getAuth(): Observable<AuthModel> {
@@ -88,16 +98,35 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   createCollection(): void {
-    this.submitted = true;
+    this.submittedCreate = true;
     if (this.collectionCreateFG.valid){
       this.auth$.pipe(take(1)).subscribe(auth => {
-        const newCollectionDto: CreateCollectionDto = {name: this.nameFC.value, users: [auth.user]};
+        const newCollectionDto: CreateCollectionDto = {name: this.nameCreateFC.value, users: [auth.user]};
         this.store.dispatch(new AddCollection(newCollectionDto));
       });
 
-      this.submitted = false;
+      this.submittedCreate = false;
+      this.newCollection = false;
     }
-    this.newCollection = false;
 
   }
+
+  updateCollection(): void{
+    this.submittedEdit = true;
+    if (this.collectionEditFG.valid){
+      this.auth$.pipe(take(1)).subscribe(auth => {
+        const updateCollectionDto: UpdateCollectionDto = {
+          id: this.currentCollection.id,
+          name: this.nameEditFC.value,
+          users: this.currentCollection.users,
+          items: this.currentCollection.items,
+          userid: auth.user.id};
+        this.store.dispatch(new UpdateCollection(updateCollectionDto));
+    });
+      this.submittedEdit = false;
+      this.editCollection = false;
+  }
+  }
+
+
 }
