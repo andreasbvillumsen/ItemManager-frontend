@@ -72,7 +72,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.errorMessage$
         .pipe(takeUntil(this.unsubscriber$))
         .subscribe(error => {
-          this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
     this.newCollection = false;
@@ -128,5 +127,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
   }
 
+  clearError(): void {
+    this.store.dispatch(new ClearError());
 
+  }
 }
