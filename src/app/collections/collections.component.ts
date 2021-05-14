@@ -17,6 +17,7 @@ import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
 import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-collections',
@@ -33,11 +34,18 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   auth$: Observable<AuthModel>;
   @Select(ItemState.items)
   items$: Observable<ItemModel[]>;
+  newCollection: boolean;
+  collectionCreateFG = new FormGroup({
+    nameFC: new FormControl('', Validators.required)
+  });
 
   currentCollection: CollectionModel | undefined;
 
   constructor(private store: Store) { }
 
+  get nameFC(): AbstractControl{
+    return this.collectionCreateFG.get('nameFC');
+  }
   ngOnInit(): void {
 
     this.store.dispatch(new ListenForCollectionsForUser());
@@ -53,6 +61,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
+    this.newCollection = false;
 
 
 
@@ -74,4 +83,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new StopListening());
   }
 
+  createCollection(): void {
+
+  }
 }

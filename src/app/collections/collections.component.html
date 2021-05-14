@@ -94,6 +94,24 @@
               </svg>
               {{collection.name}}
             </a>
+            <div *ngIf="newCollection">
+              <form class="form" [formGroup]="collectionCreateFG" (ngSubmit)="createCollection()">
+                <div class="form-spacing">
+                  <input class="input-title" type="text" placeholder="Collection" aria-label="Full name">
+                  <button class="btn-create" type="button">
+                    create
+                  </button>
+                  <button class="btn-cancel" type="button" (click)="newCollection = false">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+
+            </div>
+            <div>
+              <button class="btn-transparent" (click)="newCollection = true">New Collection</button>
+            </div>
+
           </nav>
         </div>
       </div>
