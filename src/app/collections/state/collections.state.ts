@@ -5,23 +5,25 @@ import {Subject, Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
   AddCollection, ClearError,
-  DeleteCollection, GetAllCollections, GetCollectionsForUser,
-  ListenForCollections, ListenForCollectionsForUser, ListenForErrors, StopListening,
+  DeleteCollection, GetAllCollections, GetCollectionsForUser, GetOneCollectionWithRelations,
+  ListenForCollections, ListenForCollectionsForUser, ListenForErrors, ListenForOneCollectionWithRelations, StopListening,
   UpdateCollection,
-  UpdateCollectionsStore, UpdateError
+  UpdateCollectionsStore, UpdateCollectionWithRelationsStore, UpdateError
 } from './collections.actions';
 import {takeUntil} from 'rxjs/operators';
 
 export interface CollectionsStateModel{
-  Collections: CollectionModel[];
+  collections: CollectionModel[];
   errorMessage: string;
+  collection: CollectionModel;
 }
 
 @State<CollectionsStateModel>({
   name: 'collection',
   defaults: {
-    Collections: [],
-    errorMessage: undefined
+    collections: [],
+    errorMessage: undefined,
+    collection: undefined
   }
 })
 @Injectable()
@@ -33,7 +35,12 @@ export class CollectionState {
 
   @Selector()
   static Collections(state: CollectionsStateModel): CollectionModel[] {
-    return state.Collections;
+    return state.collections;
+  }
+
+  @Selector()
+  static collection(state: CollectionsStateModel): CollectionModel {
+    return state.collection;
   }
 
   @Selector()
@@ -47,6 +54,15 @@ export class CollectionState {
         .pipe(takeUntil(this.unsubscriber$))
       .subscribe(collections => {
         ctx.dispatch(new UpdateCollectionsStore(collections));
+      });
+  }
+
+  @Action(ListenForOneCollectionWithRelations)
+  listenForCollectionWithRelations(ctx: StateContext<CollectionsStateModel>): void {
+    this.collectionsService.listenForOneCollection()
+        .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(collection => {
+        ctx.dispatch(new UpdateCollectionWithRelationsStore(collection));
       });
   }
 
@@ -82,7 +98,17 @@ export class CollectionState {
     const state = ctx.getState();
     const newState: CollectionsStateModel = {
       ...state,
-      Collections: action.collections
+      collections: action.collections
+    };
+    ctx.setState(newState);
+  }
+
+  @Action(UpdateCollectionWithRelationsStore)
+  updateCollectionWithRelation(ctx: StateContext<CollectionsStateModel>, action: UpdateCollectionWithRelationsStore): void {
+    const state = ctx.getState();
+    const newState: CollectionsStateModel = {
+      ...state,
+      collection: action.collection
     };
     ctx.setState(newState);
   }
@@ -96,6 +122,12 @@ export class CollectionState {
   @Action(GetAllCollections)
   getAllCollections(ctx: StateContext<CollectionsStateModel>): void{
     this.collectionsService.getAllCollections();
+
+  }
+
+  @Action(GetOneCollectionWithRelations)
+  getOneCollectionWithRelations(ctx: StateContext<CollectionsStateModel>, action: GetOneCollectionWithRelations): void{
+    this.collectionsService.getOneCollectionsWithRelations(action.id);
 
   }
 

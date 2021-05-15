@@ -9,11 +9,11 @@ import {
   AddCollection,
   ClearError,
   GetAllCollections,
-  GetCollectionsForUser,
+  GetCollectionsForUser, GetOneCollectionWithRelations,
   ListenForCollections,
-  ListenForCollectionsForUser, ListenForErrors, StopListening, UpdateCollection,
+  ListenForCollectionsForUser, ListenForErrors, ListenForOneCollectionWithRelations, StopListening, UpdateCollection,
 } from './state/collections.actions';
-import {take, takeUntil} from 'rxjs/operators';
+import {first, take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
@@ -47,6 +47,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   collectionEditFG = new FormGroup({
     nameEditFC: new FormControl('', Validators.required)
   });
+  @Select(CollectionState.collection)
+  collection$: Observable<CollectionModel>;
 
   currentCollection: CollectionModel | undefined;
 
@@ -64,6 +66,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(new ListenForCollectionsForUser());
     this.store.dispatch(new ListenForItems());
+    this.store.dispatch(new ListenForOneCollectionWithRelations());
     this.auth$ = this.store.select(AuthState.auth);
     this.auth$.pipe(take(1)).subscribe(auth => {
        this.store.dispatch(new GetCollectionsForUser(auth.user.id));
@@ -107,6 +110,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
       this.submittedCreate = false;
       this.newCollection = false;
+      this.nameCreateFC.reset();
     }
 
   }
@@ -115,16 +119,22 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.submittedEdit = true;
     if (this.collectionEditFG.valid){
       this.auth$.pipe(take(1)).subscribe(auth => {
-        const updateCollectionDto: UpdateCollectionDto = {
-          id: this.currentCollection.id,
-          name: this.nameEditFC.value,
-          users: this.currentCollection.users,
-          items: this.currentCollection.items,
-          userid: auth.user.id};
-        this.store.dispatch(new UpdateCollection(updateCollectionDto));
+        this.store.dispatch(new GetOneCollectionWithRelations(this.currentCollection.id));
+        this.collection$.pipe(first(col => col !== undefined)).subscribe(collection => {
+          const updateCollectionDto: UpdateCollectionDto = {
+            id: collection.id,
+            name: this.nameEditFC.value,
+            users: collection.users,
+            items: collection.items,
+            userid: auth.user.id};
+          console.log(updateCollectionDto);
+          this.store.dispatch(new UpdateCollection(updateCollectionDto));
+        });
     });
+
       this.submittedEdit = false;
       this.editCollection = false;
+      this.nameEditFC.reset();
   }
   }
 

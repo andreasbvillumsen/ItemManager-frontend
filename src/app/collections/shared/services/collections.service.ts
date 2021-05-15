@@ -63,16 +63,7 @@ export class CollectionsService {
   }
   listenForOneCollection(): Observable<CollectionModel>{
     return this.socket
-      .fromEvent<ReadCollectionDto>('oneCollection')
-      .pipe(
-      map(readCollectionDto => ({
-        id: readCollectionDto.id,
-        name: readCollectionDto.name,
-        items: new Array<ItemModel>(),
-        users: new Array<UserModel>()
-
-      }) )
-      );
+      .fromEvent<CollectionModel>('oneCollection');
 
   }
 
@@ -90,6 +81,9 @@ export class CollectionsService {
  }
   getCollectionsForUser(userid: number): void {
       this.socket.emit('findAllCollectionsByUserID', userid);
+  }
+  getOneCollectionsWithRelations(id: number): void {
+      this.socket.emit('findOneCollection', id);
   }
   getAllCollections(): void {
       this.socket.emit('findAllCollections');

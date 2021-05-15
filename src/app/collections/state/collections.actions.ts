@@ -7,6 +7,10 @@ export class ListenForCollections {
   static readonly type = '[collection] Listen for collections';
 }
 
+export class ListenForOneCollectionWithRelations {
+  static readonly type = '[collection] Listen for one collection with relations';
+}
+
 export class StopListening {
   static readonly type = '[collection] Stop listening';
 }
@@ -39,6 +43,13 @@ export class UpdateCollectionsStore {
 
 }
 
+export class UpdateCollectionWithRelationsStore {
+  constructor(public collection: CollectionModel) {}
+
+  static readonly type = '[collection] Update collection with relations store';
+
+}
+
 export class GetCollectionsForUser{
   constructor(public Userid: number){}
 
@@ -51,6 +62,11 @@ export class ClearError{
 
 export class GetAllCollections{
   static readonly type = '[collection] get all collections';
+}
+
+export class GetOneCollectionWithRelations{
+  constructor(public id: number) {}
+  static readonly type = '[collection] get one collection with relations';
 }
 
 export class ListenForCollectionsForUser {

@@ -64,7 +64,7 @@
           <div *ngIf="newCollection">
             <form class="form" [formGroup]="collectionCreateFG" (ngSubmit)="createCollection()">
               <div class="form-spacing">
-                <input class="input-title" required type="text" placeholder="Collection" aria-label="Full name" formControlName="nameFC">
+                <input class="input-title" required type="text" placeholder="Collection" aria-label="Full name" formControlName="nameCreateFC">
                 <button class="btn-create" type="submit">
                   create
                 </button>
@@ -117,7 +117,7 @@
             <div *ngIf="newCollection">
               <form class="form" [formGroup]="collectionCreateFG" (ngSubmit)="createCollection()">
                 <div class="form-spacing">
-                  <input class="input-title" required type="text" placeholder="Collection" aria-label="Full name" formControlName="nameFC">
+                  <input class="input-title" required type="text" placeholder="Collection" aria-label="Full name" formControlName="nameCreateFC">
                   <button class="btn-create" type="submit">
                     create
                   </button>
