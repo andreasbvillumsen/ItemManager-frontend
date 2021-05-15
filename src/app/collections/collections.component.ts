@@ -117,12 +117,13 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   updateCollection(): void{
     this.submittedEdit = true;
     if (this.collectionEditFG.valid){
+      const newName = this.nameEditFC.value;
       this.auth$.pipe(take(1)).subscribe(auth => {
         this.store.dispatch(new GetOneCollectionWithRelations(this.currentCollection.id));
-        this.collection$.pipe(first(col => col !== undefined)).subscribe(collection => {
+        this.collection$.pipe(first(col => col !== undefined && col.id === this.currentCollection.id)).subscribe(collection => {
           const updateCollectionDto: UpdateCollectionDto = {
             id: collection.id,
-            name: this.nameEditFC.value,
+            name: newName,
             users: collection.users,
             items: collection.items,
             userid: auth.user.id};
