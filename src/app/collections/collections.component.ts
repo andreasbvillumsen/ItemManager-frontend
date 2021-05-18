@@ -160,4 +160,17 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ClearError());
 
   }
+
+  onCancel(): void {
+
+    if (this.newCollection)
+    {
+      this.newCollection = false;
+      this.nameCreateFC.reset();
+    }else if (this.editCollection){
+      this.editCollection = false;
+      this.nameEditFC.reset();
+    }
+
+  }
 }
