@@ -23,7 +23,7 @@ import {filter, first, take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
-import {AddItem, ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {AddItem,ItemsInCollection, ListenForItems, ListenForItemsInCollection} from '../items/state/items.actions';
 import {SetAuth} from '../auth/state/auth.actions';
 import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -85,7 +85,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.store.dispatch(new ListenForCollectionsForUser());
-    this.store.dispatch(new ListenForItems());
+    this.store.dispatch(new ListenForItemsInCollection());
     this.store.dispatch(new ListenForOneCollectionWithRelations());
     this.store.dispatch(new ListenForCollectionUpdated());
     this.updatedCollection$
