@@ -23,7 +23,6 @@ export class AuthState {
 
   @Action(SetAuth)
   setAuth(ctx: StateContext<AuthStateModel>, sa: SetAuth): void {
-    console.log('setAuth', 'Got here too');
     const newState: AuthStateModel = {
       auth: sa.auth
     };

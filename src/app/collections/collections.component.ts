@@ -18,6 +18,8 @@ import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
 import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {SetAuth} from '../auth/state/auth.actions';
+import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
 
@@ -36,6 +38,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   auth$: Observable<AuthModel>;
   @Select(ItemState.items)
   items$: Observable<ItemModel[]>;
+  profileOpened = false;
   newCollection: boolean;
   submitted: boolean;
   collectionCreateFG = new FormGroup({
@@ -44,7 +47,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
   currentCollection: CollectionModel | undefined;
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private router: Router) { }
 
   get nameFC(): AbstractControl{
     return this.collectionCreateFG.get('nameFC');
@@ -64,11 +67,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
+    
     this.newCollection = false;
     this.submitted = false;
-
-
-
   }
 
   getAuth(): Observable<AuthModel> {
@@ -87,6 +88,14 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new StopListening());
   }
 
+  toggleProfileOpened(): void {
+    this.profileOpened = !this.profileOpened;
+  }
+
+  logout(): void {
+    this.store.dispatch(new SetAuth(null));
+    this.router.navigate(['/']);
+    
   createCollection(): void {
     this.submitted = true;
     if (this.collectionCreateFG.valid){
@@ -98,6 +107,5 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       this.submitted = false;
     }
     this.newCollection = false;
-
   }
 }
