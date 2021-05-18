@@ -11,7 +11,6 @@ import {
   GetAllCollections,
   GetCollectionsForUser,
   GetOneCollectionWithRelations,
-  ListenForCollections,
   ListenForCollectionsForUser,
   ListenForCollectionUpdated,
   ListenForErrors,
@@ -20,16 +19,14 @@ import {
   UpdateCollection,
 } from './state/collections.actions';
 import {filter, first, take, takeUntil} from 'rxjs/operators';
-import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
-import {AddItem, ItemsInCollection, ListenForItems, ListenForItemsInCollection} from '../items/state/items.actions';
+import {AddItem, ItemsInCollection, ListenForItemsInCollection} from '../items/state/items.actions';
 import {SetAuth} from '../auth/state/auth.actions';
 import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
 import {UpdateCollectionDto} from './shared/dtos/update-collection.dto';
-import {ItemsService} from '../items/shared/services/items.service';
 import {CreateItemDto} from '../items/shared/dtos/create-item.dto';
 import {DeleteCollectionDto} from './shared/dtos/delete-collection.dto';
 
@@ -57,7 +54,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   deleteDialog: boolean;
   profileOpened = false;
   newItem = false;
-  submitted: boolean;
   collectionCreateFG = new FormGroup({
     nameCreateFC: new FormControl('', Validators.required)
   });
@@ -85,7 +81,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.store.dispatch(new ListenForCollectionsForUser());
     this.store.dispatch(new ListenForItemsInCollection());
     this.store.dispatch(new ListenForOneCollectionWithRelations());
@@ -210,16 +205,13 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-
-    if (this.newCollection)
-    {
+    if (this.newCollection) {
       this.newCollection = false;
       this.nameCreateFC.reset();
-    }else if (this.editCollection){
+    } else if (this.editCollection) {
       this.editCollection = false;
       this.nameEditFC.reset();
     }
-    this.newCollection = false;
   }
 
   createNewItem(): void {
