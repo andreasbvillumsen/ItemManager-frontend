@@ -15,7 +15,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthState} from './auth/state/auth.state';
 
-const config: SocketIoConfig = { url: 'http://localhost:3400', options: {} };
+const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
 @NgModule({
   declarations: [

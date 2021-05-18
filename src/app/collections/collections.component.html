@@ -1,39 +1,8 @@
 <div class="h-screen flex overflow-hidden bg-gray-100" *ngIf="getAuth() | async as auth">
   <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
   <div class="fixed inset-0 flex z-40 md:hidden" role="dialog" aria-modal="true">
-    <!--
-      Off-canvas menu overlay, show/hide based on off-canvas menu state.
-
-      Entering: "transition-opacity ease-linear duration-300"
-        From: "opacity-0"
-        To: "opacity-100"
-      Leaving: "transition-opacity ease-linear duration-300"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
     <div class="fixed inset-0 bg-gray-600 bg-opacity-75" aria-hidden="true"></div>
-
-    <!--
-      Off-canvas menu, show/hide based on off-canvas menu state.
-
-      Entering: "transition ease-in-out duration-300 transform"
-        From: "-translate-x-full"
-        To: "translate-x-0"
-      Leaving: "transition ease-in-out duration-300 transform"
-        From: "translate-x-0"
-        To: "-translate-x-full"
-    -->
     <div class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-gray-800">
-      <!--
-        Close button, show/hide based on off-canvas menu state.
-
-        Entering: "ease-in-out duration-300"
-          From: "opacity-0"
-          To: "opacity-100"
-        Leaving: "ease-in-out duration-300"
-          From: "opacity-100"
-          To: "opacity-0"
-      -->
       <div class="absolute top-0 right-0 -mr-12 pt-2">
         <button class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
           <span class="sr-only">Close sidebar</span>
@@ -49,15 +18,15 @@
       </div>
       <div class="flex-1 flex flex-col overflow-y-auto" *ngIf="collections$ | async as collectionModels">
         <nav class="flex-1 px-2 py-4 bg-gray-800 space-y-1">
-          <h6 class="text-white pl-2">My Collections</h6>
+          <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            My Collections
+          </h3>
 
           <a [ngClass]="collection === currentCollection ? 'bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md' : 'text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md'" *ngFor="let collection of collectionModels" (click)="selectCollection(collection)">
-            <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
+            <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" viewBox="0 0 17 19" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M3.891 1.418C3.888.815 3.451.328 2.913.33L.967.34C.43.343-.003.834 0 1.437l.08 16.326c.003.603.44 1.09.978 1.087l1.946-.01c.536-.002.97-.493.967-1.096L3.89 1.418z" fill="#b3b3b3"/><path fill="#fff" d="M.005 2.961H3.91v1.164H.005zM.064 15.324h3.913v1.164H.064z"/><path d="M8.234 1.444C8.231.84 7.794.354 7.256.356L5.31.366c-.536.003-.97.494-.967 1.097l.08 16.326c.003.603.44 1.09.978 1.087l1.946-.01c.537-.002.97-.493.967-1.096l-.08-16.326z" fill="#b3b3b3"/><path fill="#fff" d="M4.348 2.961h3.904v1.164H4.348zM4.412 15.324h3.906v1.164H4.412z"/><path d="M12.197.835c-.155-.583-.702-.944-1.22-.806l-1.881.5c-.52.139-.814.724-.66 1.306l4.198 15.778c.155.582.702.943 1.221.805l1.88-.5c.52-.138.815-.723.66-1.306L12.197.835z" fill="#b3b3b3"/><path fill="#fff" d="M8.83 3.31l3.769-.983.294 1.127-3.77.983zM12.005 15.258l3.776-.984.293 1.126-3.775.985z"/></svg>
             <span class="flex-1">
-                {{collection.name}}
-              </span>
+              {{collection.name}}
+            </span>
           </a>
 
           <div *ngIf="newCollection" class="pt-5">
@@ -94,7 +63,7 @@
     </div>
   </div>
 
-  <!-- Static sidebar for desktop -->
+  <!-- Sidebar for desktop -->
   <div class="hidden md:flex md:flex-shrink-0" >
     <div class="flex flex-col w-64">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
@@ -105,12 +74,12 @@
 
         <div class="flex-1 flex flex-col overflow-y-auto" *ngIf="collections$ | async as collectionModels">
           <nav class="flex-1 px-2 py-4 bg-gray-800 space-y-1">
-            <h6 class="text-white pl-2">My Collections</h6>
+            <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              My Collections
+            </h3>
 
             <a [ngClass]="collection === currentCollection ? 'bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md' : 'text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md'" *ngFor="let collection of collectionModels" (click)="selectCollection(collection)">
-              <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
+              <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" viewBox="0 0 17 19" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M3.891 1.418C3.888.815 3.451.328 2.913.33L.967.34C.43.343-.003.834 0 1.437l.08 16.326c.003.603.44 1.09.978 1.087l1.946-.01c.536-.002.97-.493.967-1.096L3.89 1.418z" fill="#b3b3b3"/><path fill="#fff" d="M.005 2.961H3.91v1.164H.005zM.064 15.324h3.913v1.164H.064z"/><path d="M8.234 1.444C8.231.84 7.794.354 7.256.356L5.31.366c-.536.003-.97.494-.967 1.097l.08 16.326c.003.603.44 1.09.978 1.087l1.946-.01c.537-.002.97-.493.967-1.096l-.08-16.326z" fill="#b3b3b3"/><path fill="#fff" d="M4.348 2.961h3.904v1.164H4.348zM4.412 15.324h3.906v1.164H4.412z"/><path d="M12.197.835c-.155-.583-.702-.944-1.22-.806l-1.881.5c-.52.139-.814.724-.66 1.306l4.198 15.778c.155.582.702.943 1.221.805l1.88-.5c.52-.138.815-.723.66-1.306L12.197.835z" fill="#b3b3b3"/><path fill="#fff" d="M8.83 3.31l3.769-.983.294 1.127-3.77.983zM12.005 15.258l3.776-.984.293 1.126-3.775.985z"/></svg>
               <span class="flex-1">
                 {{collection.name}}
               </span>
@@ -146,7 +115,9 @@
       </div>
     </div>
   </div>
+
   <div class="flex flex-col w-0 flex-1 overflow-hidden">
+    <!-- Top Menu -->
     <div class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
       <button class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden">
         <span class="sr-only">Open sidebar</span>
@@ -155,65 +126,43 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
         </svg>
       </button>
+      <!-- Top menu bar -->
       <div class="flex-1 px-4 flex justify-between">
-        <div class="flex-1 flex">
-          <form class="w-full flex md:ml-0" action="#" method="GET">
-            <label for="search_field" class="sr-only">Search</label>
-            <div class="relative w-full text-gray-400 focus-within:text-gray-600">
-              <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                <!-- Heroicon name: solid/search -->
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <input id="search_field" class="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search" type="search" name="search">
-            </div>
-          </form>
-        </div>
+        <div class="flex-1 flex"></div>
         <div class="ml-4 flex items-center md:ml-6">
-          <button class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            <span class="sr-only">View notifications</span>
-            <!-- Heroicon name: outline/bell -->
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-          </button>
-
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
             <div>
-              <button (click)="toggleProfileOpened()" type="button" class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <button (click)="toggleProfileOpened()" type="button" class="text-gray-400 hover:text-gray-500 max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=BwG2cx2DBK&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </button>
             </div>
 
-            <!--
-              Dropdown menu, show/hide based on menu state.
-
-              Entering: "transition ease-out duration-100"
-                From: "transform opacity-0 scale-95"
-                To: "transform opacity-100 scale-100"
-              Leaving: "transition ease-in duration-75"
-                From: "transform opacity-100 scale-100"
-                To: "transform opacity-0 scale-95"
-            -->
-            <div *ngIf="profileOpened" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform scale-95" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+            <div *ngIf="profileOpened" class="inline origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform scale-95" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
               <!-- Active: "bg-gray-100", Not Active: "" -->
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-gray-500" role="menuitem" tabindex="-1" id="user-menu-item-2" (click)="logout()">Sign out</a>
+
+              <a href="#" class="block px-4 py-2 flex items-center text-sm text-gray-700 hover:text-gray-500" role="menuitem" tabindex="-1" id="user-menu-item-2" (click)="logout()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                </svg>
+                Sign out
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Page Body -->
     <main class="flex-1 relative overflow-y-auto focus:outline-none">
 
       <div class="py-6">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8" *ngIf="currentCollection" >
 
-          <!-- This example requires Tailwind CSS v2.0+ -->
           <div class="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
             <div>
             <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center" *ngIf="!editCollection">
@@ -245,10 +194,15 @@
               <!--<button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Share
               </button>-->
-              <button (click)="newItem = true;" type="button" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <!-- Heroicon name: solid/plus -->
+              <button *ngIf="!newItem" (click)="newItem = true;" type="button" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+
+              <button *ngIf="newItem" (click)="cancelNewItem()" type="button" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
                 </svg>
               </button>
             </div>
@@ -302,7 +256,7 @@
                   </form>
                 </div>
               </div>
-              <div class="relative mt-5">
+              <div class="relative my-5">
                 <div class="absolute inset-0 flex items-center" aria-hidden="true">
                   <div class="w-full border-t border-gray-300"></div>
                 </div>

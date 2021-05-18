@@ -13,6 +13,9 @@ import {ItemsAddComponent} from './items-add/items-add.component';
     ItemsShowComponent,
     ItemsAddComponent
   ],
+  exports: [
+    ItemsShowComponent
+  ],
   imports: [
     CommonModule,
     ItemsRoutingModule,

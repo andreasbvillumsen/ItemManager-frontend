@@ -196,6 +196,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           collection: this.currentCollection};
         this.store.dispatch(new AddItem(newItemDto));
       });
+      this.createItemFG.reset();
+      this.newItem = false;
     }
   }
 
