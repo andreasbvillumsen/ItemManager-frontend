@@ -1,4 +1,5 @@
 import {ItemModel} from '../shared/models/ItemModel';
+import {CreateItemDto} from '../shared/dtos/create-item.dto';
 
 
 export class ListenForItems {
@@ -15,7 +16,7 @@ export class ListenForItemsInCollection {
 
 
 export class AddItem {
-  constructor(public item: ItemModel) {}
+  constructor(public item: CreateItemDto) {}
 
   static readonly type = '[item] add item';
 

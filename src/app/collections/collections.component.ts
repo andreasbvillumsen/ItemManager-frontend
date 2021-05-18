@@ -23,10 +23,14 @@ import {filter, first, take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
-import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {AddItem, ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {SetAuth} from '../auth/state/auth.actions';
+import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
 import {UpdateCollectionDto} from './shared/dtos/update-collection.dto';
+import {ItemsService} from '../items/shared/services/items.service';
+import {CreateItemDto} from '../items/shared/dtos/create-item.dto';
 
 @Component({
   selector: 'app-collections',
@@ -49,6 +53,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   submittedCreate: boolean;
   submittedEdit: boolean;
   editCollection: boolean;
+  profileOpened = false;
+  newItem = false;
+  submitted: boolean;
   collectionCreateFG = new FormGroup({
     nameCreateFC: new FormControl('', Validators.required)
   });
@@ -58,9 +65,14 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @Select(CollectionState.collection)
   collection$: Observable<CollectionModel>;
 
+  createItemFG = new FormGroup({
+    itemNameFC: new FormControl('', Validators.required),
+    itemDescFC: new FormControl('', Validators.required)
+  });
+
   currentCollection: CollectionModel | undefined;
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private router: Router) { }
 
   get nameCreateFC(): AbstractControl{
     return this.collectionCreateFG.get('nameCreateFC');
@@ -95,6 +107,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         .subscribe(error => {
           this.errorMessage = error;
         });
+
     this.newCollection = false;
     this.submittedCreate = false;
     this.editCollection = false;
@@ -115,6 +128,15 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.unsubscriber$.next();
     this.unsubscriber$.complete();
     this.store.dispatch(new StopListening());
+  }
+
+  toggleProfileOpened(): void {
+    this.profileOpened = !this.profileOpened;
+  }
+
+  logout(): void {
+    this.store.dispatch(new SetAuth(null));
+    this.router.navigate(['/']);
   }
 
   createCollection(): void {
@@ -171,6 +193,23 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       this.editCollection = false;
       this.nameEditFC.reset();
     }
+    this.newCollection = false;
+  }
 
+  createNewItem(): void {
+    if (this.createItemFG.valid) {
+      this.auth$.pipe(take(1)).subscribe(auth => {
+        const newItemDto: CreateItemDto = {
+          name: this.createItemFG.get('itemNameFC').value,
+          desc: this.createItemFG.get('itemDescFC').value,
+          collection: this.currentCollection};
+        this.store.dispatch(new AddItem(newItemDto));
+      });
+    }
+  }
+
+  cancelNewItem(): void {
+    this.newItem = false;
+    this.createItemFG.reset();
   }
 }
