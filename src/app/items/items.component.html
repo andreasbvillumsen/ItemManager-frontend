@@ -1,9 +1,0 @@
-<div *ngIf="errorMessage">
-    <p style="color: darkred">{{errorMessage}}</p>
-</div>
-
-<div *ngIf="collections$ | async as collections">
-    <div *ngFor="let collection of collections">
-        {{collection.name}}
-    </div>
-</div>

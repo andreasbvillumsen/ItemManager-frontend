@@ -6,6 +6,7 @@ import {Observable, Subject} from 'rxjs';
 import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {
+  AddCollection,
   ClearError,
   GetAllCollections,
   GetCollectionsForUser,
@@ -19,6 +20,8 @@ import {ItemModel} from '../items/shared/models/ItemModel';
 import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
 import {SetAuth} from '../auth/state/auth.actions';
 import {Router} from '@angular/router';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
 
 @Component({
   selector: 'app-collections',
@@ -36,11 +39,19 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @Select(ItemState.items)
   items$: Observable<ItemModel[]>;
   profileOpened = false;
+  newCollection: boolean;
+  submitted: boolean;
+  collectionCreateFG = new FormGroup({
+    nameFC: new FormControl('', Validators.required)
+  });
 
   currentCollection: CollectionModel | undefined;
 
   constructor(private store: Store, private router: Router) { }
 
+  get nameFC(): AbstractControl{
+    return this.collectionCreateFG.get('nameFC');
+  }
   ngOnInit(): void {
 
     this.store.dispatch(new ListenForCollectionsForUser());
@@ -56,6 +67,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
+    
+    this.newCollection = false;
+    this.submitted = false;
   }
 
   getAuth(): Observable<AuthModel> {
@@ -81,5 +95,17 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   logout(): void {
     this.store.dispatch(new SetAuth(null));
     this.router.navigate(['/']);
+    
+  createCollection(): void {
+    this.submitted = true;
+    if (this.collectionCreateFG.valid){
+      this.auth$.pipe(take(1)).subscribe(auth => {
+        const newCollectionDto: CreateCollectionDto = {name: this.nameFC.value, users: [auth.user]};
+        this.store.dispatch(new AddCollection(newCollectionDto));
+      });
+
+      this.submitted = false;
+    }
+    this.newCollection = false;
   }
 }

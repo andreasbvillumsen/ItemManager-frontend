@@ -7,6 +7,7 @@ import {CollectionState} from './state/collections.state';
 import {NgxsModule} from '@ngxs/store';
 import {ItemsModule} from '../items/items.module';
 import {ItemState} from '../items/state/items.state';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 
@@ -18,7 +19,8 @@ import {ItemState} from '../items/state/items.state';
     CommonModule,
     CollectionsRoutingModule,
     NgxsModule.forFeature([CollectionState, ItemState]),
-    ItemsModule
+    ItemsModule,
+    ReactiveFormsModule
   ]
 })
 export class CollectionsModule { }

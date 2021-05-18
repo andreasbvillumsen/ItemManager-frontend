@@ -1,4 +1,4 @@
-import {Action, Selector, State, StateContext} from '@ngxs/store';
+import {Action, createSelector, Selector, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {ItemModel} from '../shared/models/ItemModel';
@@ -31,7 +31,25 @@ export class ItemState {
 
   constructor(private itemService: ItemsService) {
   }
-
+  /*
+  @Selector()
+  static item(state: ItemsStateModel): ItemModel{
+      return (id: number) => {
+        return state.items.find(s => s.id === id);
+      };
+  }*/
+  /*
+  * static pandas(type: string) {
+    return createSelector([ZooState], (state: string[]) => {
+      return state.filter(s => s.indexOf('panda') > -1).filter(s => s.indexOf(type) > -1);
+    });
+  }
+  * */
+  static item(id: number): (state: ItemsStateModel) => ItemModel{
+    return createSelector([ItemState], (state: ItemsStateModel) => {
+      return state.items.find(item => item.id === id);
+    });
+  }
   @Selector()
   static items(state: ItemsStateModel): ItemModel[] {
     return state.items;

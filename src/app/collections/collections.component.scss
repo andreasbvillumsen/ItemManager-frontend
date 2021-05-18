@@ -1,0 +1,40 @@
+.btn {
+  @apply font-bold py-2 px-4 rounded mr-2;
+}
+.btn-blue {
+  @apply bg-blue-500 text-white;
+}
+.btn-blue:hover {
+  @apply bg-blue-700;
+}
+.btn-transparent{
+  @apply bg-transparent hover:bg-blue-500
+  text-blue-700 font-semibold hover:text-white
+  py-2 px-4 border border-blue-500 hover:border-transparent rounded;
+}
+
+.btn-create{
+  @apply flex-shrink-0
+  bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700
+  text-sm border-4 text-white py-1 px-2 rounded;
+}
+
+.btn-cancel{
+  @apply flex-shrink-0 border-transparent border-4 text-blue-500 hover:text-blue-800 text-sm py-1 px-2 rounded;
+}
+
+.input-title{
+  @apply appearance-none bg-transparent border-none w-full text-gray-100 mr-3 py-1 px-2 leading-tight focus:outline-none;
+}
+
+.form-spacing{
+  @apply flex items-center border-b border-blue-500 py-2;
+}
+
+.form{
+  @apply w-full max-w-sm;
+}
+
+.warn-text-color{
+  @apply text-red-500;
+}

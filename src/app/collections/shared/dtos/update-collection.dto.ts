@@ -7,4 +7,5 @@ export interface UpdateCollectionDto {
   name: string;
   items: ItemModel[];
   users: UserModel[];
+  userid: number;
 }

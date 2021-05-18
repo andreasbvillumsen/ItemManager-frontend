@@ -76,15 +76,13 @@ export class CollectionsService {
 
   }
 
-  createCollection(collection: CollectionModel, Userid: number ): void {
-    const createCollectionDto: CreateCollectionDto = {name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('createCollection', createCollectionDto, Userid);
+  createCollection(createCollectionDto: CreateCollectionDto): void {
+    console.log(createCollectionDto.name);
+    this.socket.emit('createCollection', createCollectionDto);
   }
 
-  updateCollection(collection: CollectionModel, userid: number): void {
-    const updateCollectionDto: UpdateCollectionDto = {id: collection.id ,
-      name: collection.name, items: collection.items, users: collection.users};
-    this.socket.emit('updateCollection', updateCollectionDto, userid);
+  updateCollection(updateCollectionDto: UpdateCollectionDto): void {
+    this.socket.emit('updateCollection', updateCollectionDto);
   }
 
   deleteCollection(collectionId: number, userid: number): void {
