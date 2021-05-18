@@ -273,7 +273,7 @@
                       <div class="mt-6 grid grid-cols-12 gap-6">
                         <div class="col-span-12 sm:col-span-6">
                           <label for="first_name" class="block text-sm font-medium text-gray-700">Item Name</label>
-                          <input type="text" name="first_name" id="first_name" autocomplete="given-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm">
+                          <input type="text" formControlName="itemNameFC" id="first_name" autocomplete="given-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-12 sm:col-span-6">
@@ -281,7 +281,7 @@
                             Description
                           </label>
                           <div class="mt-1">
-                            <textarea id="about" name="about" rows="3" class="shadow-sm focus:ring-light-blue-500 focus:border-light-blue-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                            <textarea id="about" formControlName="itemDescFC" rows="3" class="shadow-sm focus:ring-light-blue-500 focus:border-light-blue-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
                           </div>
                           <p class="mt-2 text-sm text-gray-500">
                             Brief description for your profile. URLs are hyperlinked.
