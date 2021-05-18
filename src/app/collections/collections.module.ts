@@ -9,8 +9,6 @@ import {ItemsModule} from '../items/items.module';
 import {ItemState} from '../items/state/items.state';
 import {ReactiveFormsModule} from '@angular/forms';
 
-
-
 @NgModule({
   declarations: [
     CollectionsComponent

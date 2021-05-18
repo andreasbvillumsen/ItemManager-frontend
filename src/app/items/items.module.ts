@@ -5,11 +5,13 @@ import {NgxsModule} from '@ngxs/store';
 import {CollectionState} from '../collections/state/collections.state';
 import {ItemsShowComponent} from './items-show/items-show.component';
 import {ItemState} from './state/items.state';
+import {ItemsAddComponent} from './items-add/items-add.component';
 
 
 @NgModule({
   declarations: [
-    ItemsShowComponent
+    ItemsShowComponent,
+    ItemsAddComponent
   ],
   imports: [
     CommonModule,

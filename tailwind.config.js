@@ -2,7 +2,7 @@ require('dotenv').config();
 const enablePurge = process.env.ENABLE_PURGE || false;
 module.exports = {
   purge: {
-    enabled: enablePurge,
+    enabled: false,
     content: [
       './src/**/*.html',
       './src/**/*.scss'
