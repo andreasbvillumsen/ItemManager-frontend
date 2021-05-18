@@ -61,6 +61,18 @@ export class CollectionsService {
       );
 
   }
+
+    listenForCollectionUpdated(): Observable<CollectionModel>{
+        return this.socket
+            .fromEvent<ReadCollectionDto>('collectionUpdated').pipe(map(readCollectionDto => ({
+                id: readCollectionDto.id,
+                name: readCollectionDto.name,
+                items: new Array<ItemModel>(),
+                users: new Array<UserModel>()
+            })));
+
+    }
+
   listenForOneCollection(): Observable<CollectionModel>{
     return this.socket
       .fromEvent<CollectionModel>('oneCollection');

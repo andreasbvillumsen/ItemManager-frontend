@@ -4,11 +4,22 @@ import {Injectable} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
-  AddCollection, ClearError,
-  DeleteCollection, GetAllCollections, GetCollectionsForUser, GetOneCollectionWithRelations,
-  ListenForCollections, ListenForCollectionsForUser, ListenForErrors, ListenForOneCollectionWithRelations, StopListening,
+  AddCollection,
+  ClearError,
+  DeleteCollection,
+  GetAllCollections,
+  GetCollectionsForUser,
+  GetOneCollectionWithRelations,
+  ListenForCollections,
+  ListenForCollectionsForUser,
+  ListenForCollectionUpdated,
+  ListenForErrors,
+  ListenForOneCollectionWithRelations,
+  StopListening,
   UpdateCollection,
-  UpdateCollectionsStore, UpdateCollectionWithRelationsStore, UpdateError
+  UpdateCollectionsStore,
+  UpdateCollectionWithRelationsStore,
+  UpdateError, UpdateStoreWithUpdatedCollection
 } from './collections.actions';
 import {takeUntil} from 'rxjs/operators';
 
@@ -16,6 +27,7 @@ export interface CollectionsStateModel{
   collections: CollectionModel[];
   errorMessage: string;
   collection: CollectionModel;
+  updatedCollection: CollectionModel;
 }
 
 @State<CollectionsStateModel>({
@@ -23,7 +35,8 @@ export interface CollectionsStateModel{
   defaults: {
     collections: [],
     errorMessage: undefined,
-    collection: undefined
+    collection: undefined,
+    updatedCollection: undefined
   }
 })
 @Injectable()
@@ -44,6 +57,11 @@ export class CollectionState {
   }
 
   @Selector()
+  static updatedCollection(state: CollectionsStateModel): CollectionModel {
+    return state.updatedCollection;
+  }
+
+  @Selector()
   static error(state: CollectionsStateModel): string {
     return state.errorMessage;
   }
@@ -55,6 +73,15 @@ export class CollectionState {
       .subscribe(collections => {
         ctx.dispatch(new UpdateCollectionsStore(collections));
       });
+  }
+
+  @Action(ListenForCollectionUpdated)
+  listenForCollectionUpdated(ctx: StateContext<CollectionsStateModel>): void {
+    this.collectionsService.listenForCollectionUpdated()
+        .pipe(takeUntil(this.unsubscriber$))
+        .subscribe(collection => {
+          ctx.dispatch(new UpdateStoreWithUpdatedCollection(collection));
+        });
   }
 
   @Action(ListenForOneCollectionWithRelations)
@@ -99,6 +126,16 @@ export class CollectionState {
     const newState: CollectionsStateModel = {
       ...state,
       collections: action.collections
+    };
+    ctx.setState(newState);
+  }
+
+  @Action(UpdateStoreWithUpdatedCollection)
+  updateStoreWithUpdatedCollection(ctx: StateContext<CollectionsStateModel>, action: UpdateStoreWithUpdatedCollection): void {
+    const state = ctx.getState();
+    const newState: CollectionsStateModel = {
+      ...state,
+      updatedCollection: action.updatedCollection
     };
     ctx.setState(newState);
   }

@@ -9,11 +9,17 @@ import {
   AddCollection,
   ClearError,
   GetAllCollections,
-  GetCollectionsForUser, GetOneCollectionWithRelations,
+  GetCollectionsForUser,
+  GetOneCollectionWithRelations,
   ListenForCollections,
-  ListenForCollectionsForUser, ListenForErrors, ListenForOneCollectionWithRelations, StopListening, UpdateCollection,
+  ListenForCollectionsForUser,
+  ListenForCollectionUpdated,
+  ListenForErrors,
+  ListenForOneCollectionWithRelations,
+  StopListening,
+  UpdateCollection,
 } from './state/collections.actions';
-import {first, take, takeUntil} from 'rxjs/operators';
+import {filter, first, take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
@@ -37,6 +43,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   auth$: Observable<AuthModel>;
   @Select(ItemState.items)
   items$: Observable<ItemModel[]>;
+  @Select(CollectionState.updatedCollection)
+  updatedCollection$: Observable<CollectionModel>;
   newCollection: boolean;
   submittedCreate: boolean;
   submittedEdit: boolean;
@@ -67,6 +75,16 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ListenForCollectionsForUser());
     this.store.dispatch(new ListenForItems());
     this.store.dispatch(new ListenForOneCollectionWithRelations());
+    this.store.dispatch(new ListenForCollectionUpdated());
+    this.updatedCollection$
+        .pipe(
+            takeUntil(this.unsubscriber$),
+            filter(updatedColletion => updatedColletion !== undefined)
+        )
+        .subscribe( updatedCollection => {
+          this.selectCollection(updatedCollection);
+        });
+
     this.auth$ = this.store.select(AuthState.auth);
     this.auth$.pipe(take(1)).subscribe(auth => {
        this.store.dispatch(new GetCollectionsForUser(auth.user.id));

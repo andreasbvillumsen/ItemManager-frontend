@@ -7,6 +7,10 @@ export class ListenForCollections {
   static readonly type = '[collection] Listen for collections';
 }
 
+export class ListenForCollectionUpdated {
+  static readonly type = '[collection] Listen for collection updated';
+}
+
 export class ListenForOneCollectionWithRelations {
   static readonly type = '[collection] Listen for one collection with relations';
 }
@@ -47,6 +51,13 @@ export class UpdateCollectionWithRelationsStore {
   constructor(public collection: CollectionModel) {}
 
   static readonly type = '[collection] Update collection with relations store';
+
+}
+
+export class UpdateStoreWithUpdatedCollection {
+  constructor(public updatedCollection: CollectionModel) {}
+
+  static readonly type = '[collection] Update store with updated collection';
 
 }
 
