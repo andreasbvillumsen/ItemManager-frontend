@@ -17,11 +17,13 @@ import {take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
-import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {AddItem, ItemsInCollection, ListenForItems} from '../items/state/items.actions';
 import {SetAuth} from '../auth/state/auth.actions';
 import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
+import {ItemsService} from '../items/shared/services/items.service';
+import {CreateItemDto} from '../items/shared/dtos/create-item.dto';
 
 @Component({
   selector: 'app-collections',
@@ -40,9 +42,15 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   items$: Observable<ItemModel[]>;
   profileOpened = false;
   newCollection: boolean;
+  newItem = false;
   submitted: boolean;
   collectionCreateFG = new FormGroup({
     nameFC: new FormControl('', Validators.required)
+  });
+
+  createItemFG = new FormGroup({
+    itemNameFC: new FormControl('', Validators.required),
+    itemDescFC: new FormControl('', Validators.required)
   });
 
   currentCollection: CollectionModel | undefined;
@@ -67,7 +75,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
-    
+
     this.newCollection = false;
     this.submitted = false;
   }
@@ -95,9 +103,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   logout(): void {
     this.store.dispatch(new SetAuth(null));
     this.router.navigate(['/']);
-    
+  }
+
   createCollection(): void {
     this.submitted = true;
+
     if (this.collectionCreateFG.valid){
       this.auth$.pipe(take(1)).subscribe(auth => {
         const newCollectionDto: CreateCollectionDto = {name: this.nameFC.value, users: [auth.user]};
@@ -107,5 +117,22 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       this.submitted = false;
     }
     this.newCollection = false;
+  }
+
+  createNewItem(): void {
+    if (this.createItemFG.valid) {
+      this.auth$.pipe(take(1)).subscribe(auth => {
+        const newItemDto: CreateItemDto = {
+          name: this.createItemFG.get('itemNameFC').value,
+          desc: this.createItemFG.get('itemDescFC').value,
+          collection: this.currentCollection};
+        this.store.dispatch(new AddItem(newItemDto));
+      });
+    }
+  }
+
+  cancelNewItem(): void {
+    this.newItem = false;
+    this.createItemFG.reset();
   }
 }

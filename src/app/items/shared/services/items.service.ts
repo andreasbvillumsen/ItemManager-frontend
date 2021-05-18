@@ -28,9 +28,8 @@ export class ItemsService {
       ));
   }
 
-  createItem(item: ItemModel): void {
-    const createItemDto: CreateItemDto = {name: item.name , desc: item.desc, collection: item.collection};
-    this.socket.emit('createItem', createItemDto);
+  createItem(item: CreateItemDto): void {
+    this.socket.emit('createItem', item);
   }
 
   updateItem(item: ItemModel): void {
