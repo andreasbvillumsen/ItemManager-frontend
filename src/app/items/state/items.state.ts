@@ -81,7 +81,7 @@ export class ItemState {
 
   @Action(ListenForItemsInCollection)
   listenForItemsInCollection(ctx: StateContext<ItemsStateModel>): void {
-    this.itemService.listenForItems()
+    this.itemService.listenForItemsInCollection()
       .pipe(takeUntil(this.unsubscriber$))
       .subscribe(items => {
         ctx.dispatch(new UpdateItemsStore(items));

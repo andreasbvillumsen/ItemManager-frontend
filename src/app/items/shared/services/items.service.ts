@@ -27,6 +27,18 @@ export class ItemsService {
             collection: null }) )
       ));
   }
+  listenForItemsInCollection(): Observable<ItemModel[]>{
+    return this.socket
+      .fromEvent<ReadItemDto[]>('ItemsInCollection').pipe(
+        map((readItemDtos: ReadItemDto[] ) =>
+          readItemDtos.map(readItemDto => ({
+            id: readItemDto.id,
+            name: readItemDto.name,
+            desc: readItemDto.desc,
+            collection: null }) )
+        ));
+  }
+
 
   createItem(item: ItemModel): void {
     const createItemDto: CreateItemDto = {name: item.name , desc: item.desc, collection: item.collection};

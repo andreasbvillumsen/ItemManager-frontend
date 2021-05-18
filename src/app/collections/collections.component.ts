@@ -17,7 +17,7 @@ import {take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
-import {ItemsInCollection, ListenForItems} from '../items/state/items.actions';
+import {ItemsInCollection, ListenForItems, ListenForItemsInCollection} from '../items/state/items.actions';
 import {SetAuth} from '../auth/state/auth.actions';
 import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -55,7 +55,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.store.dispatch(new ListenForCollectionsForUser());
-    this.store.dispatch(new ListenForItems());
+    this.store.dispatch(new ListenForItemsInCollection());
     this.auth$ = this.store.select(AuthState.auth);
     this.auth$.pipe(take(1)).subscribe(auth => {
        this.store.dispatch(new GetCollectionsForUser(auth.user.id));
@@ -67,7 +67,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.store.dispatch(new ClearError());
           this.errorMessage = error;
         });
-    
+
     this.newCollection = false;
     this.submitted = false;
   }
@@ -95,7 +95,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   logout(): void {
     this.store.dispatch(new SetAuth(null));
     this.router.navigate(['/']);
-    
+  }
   createCollection(): void {
     this.submitted = true;
     if (this.collectionCreateFG.valid){
