@@ -7,7 +7,7 @@ import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {
   AddCollection,
-  ClearError,
+  ClearError, DeleteCollection,
   GetAllCollections,
   GetCollectionsForUser,
   GetOneCollectionWithRelations,
@@ -23,7 +23,7 @@ import {filter, first, take, takeUntil} from 'rxjs/operators';
 import {CollectionsService} from './shared/services/collections.service';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
-import {AddItem,ItemsInCollection, ListenForItems, ListenForItemsInCollection} from '../items/state/items.actions';
+import {AddItem, ItemsInCollection, ListenForItems, ListenForItemsInCollection} from '../items/state/items.actions';
 import {SetAuth} from '../auth/state/auth.actions';
 import {Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -31,6 +31,7 @@ import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
 import {UpdateCollectionDto} from './shared/dtos/update-collection.dto';
 import {ItemsService} from '../items/shared/services/items.service';
 import {CreateItemDto} from '../items/shared/dtos/create-item.dto';
+import {DeleteCollectionDto} from './shared/dtos/delete-collection.dto';
 
 @Component({
   selector: 'app-collections',
@@ -53,6 +54,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   submittedCreate: boolean;
   submittedEdit: boolean;
   editCollection: boolean;
+  deleteDialog: boolean;
   profileOpened = false;
   newItem = false;
   submitted: boolean;
@@ -90,8 +92,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ListenForCollectionUpdated());
     this.updatedCollection$
         .pipe(
-            takeUntil(this.unsubscriber$),
-            filter(updatedColletion => updatedColletion !== undefined)
+            takeUntil(this.unsubscriber$)
         )
         .subscribe( updatedCollection => {
           this.selectCollection(updatedCollection);
@@ -108,6 +109,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           this.errorMessage = error;
         });
 
+    this.deleteDialog = false;
     this.newCollection = false;
     this.submittedCreate = false;
     this.editCollection = false;
@@ -120,7 +122,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
   selectCollection(collection: CollectionModel): void{
     this.currentCollection = collection;
-    this.store.dispatch(new ItemsInCollection(collection.id));
+    if (this.currentCollection !== undefined){
+      this.store.dispatch(new ItemsInCollection(collection.id));
+    }
+    this.onCancel();
+    this.deleteDialog = false;
   }
 
   ngOnDestroy(): void {
@@ -178,6 +184,26 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
   }
 
+  deleteCollection(collectionId: number): void {
+    this.deleteDialog = false;
+    this.auth$
+        .pipe(take(1))
+        .subscribe(auth => {
+          const deleteCollection: DeleteCollectionDto = {
+            collectionId,
+            userId: auth.user.id
+
+
+          };
+          this.store.dispatch(new DeleteCollection(deleteCollection));
+        });
+    this.currentCollection = undefined;
+  }
+
+  showDeleteDialog(): void {
+    this.deleteDialog = true;
+  }
+
   clearError(): void {
     this.store.dispatch(new ClearError());
 
@@ -211,5 +237,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   cancelNewItem(): void {
     this.newItem = false;
     this.createItemFG.reset();
+  }
+
+  onCancelDelete(): void {
+    this.deleteDialog = false;
   }
 }

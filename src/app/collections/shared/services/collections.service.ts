@@ -9,6 +9,8 @@ import {CreateItemDto} from '../../../items/shared/dtos/create-item.dto';
 import {CreateCollectionDto} from '../dtos/create-collection.dto';
 import {UpdateCollectionDto} from '../dtos/update-collection.dto';
 import {Socket} from 'ngx-socket-io';
+import {DeleteCollection} from '../../state/collections.actions';
+import {DeleteCollectionDto} from '../dtos/delete-collection.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +90,8 @@ export class CollectionsService {
     this.socket.emit('updateCollection', updateCollectionDto);
   }
 
-  deleteCollection(collectionId: number, userid: number): void {
-    this.socket.emit('deleteCollection', collectionId, userid);
+  deleteCollection(deleteCollectionDto: DeleteCollectionDto): void {
+    this.socket.emit('deleteCollection', deleteCollectionDto);
  }
   getCollectionsForUser(userid: number): void {
       this.socket.emit('findAllCollectionsByUserID', userid);

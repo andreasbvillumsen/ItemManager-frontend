@@ -1,6 +1,7 @@
 import {CollectionModel} from '../shared/models/CollectionModel';
 import {CreateCollectionDto} from '../shared/dtos/create-collection.dto';
 import {UpdateCollectionDto} from '../shared/dtos/update-collection.dto';
+import {DeleteCollectionDto} from '../shared/dtos/delete-collection.dto';
 
 
 export class ListenForCollections {
@@ -34,7 +35,7 @@ export class UpdateCollection {
 }
 
 export class DeleteCollection {
-  constructor(public collectionId: number, public Userid: number) {}
+  constructor(public deleteCollection: DeleteCollectionDto) {}
 
   static readonly type = '[collection] delete collection';
 

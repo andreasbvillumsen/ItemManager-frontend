@@ -115,7 +115,7 @@ export class CollectionState {
 
   @Action(DeleteCollection)
   deleteCollection(ctx: StateContext<CollectionsStateModel> , action: DeleteCollection): void {
-    this.collectionsService.deleteCollection(action.collectionId, action.Userid);
+    this.collectionsService.deleteCollection(action.deleteCollection);
 
 
   }
