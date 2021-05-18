@@ -47,30 +47,34 @@
       <div class="flex-shrink-0 flex items-center px-4">
         <img class="h-8 w-auto" src="/assets/TheCollectorLogo.svg" alt="Workflow">
       </div>
-      <div class="mt-5 flex-1 h-0 overflow-y-auto" *ngIf="collections$ | async as collectionModels">
-        <nav class="px-2 space-y-1">
-          <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <a class="bg-gray-900 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md" *ngFor="let collection of collectionModels " (click)="selectCollection(collection)"  >
-            <!--
-              Heroicon name: outline/home
+      <div class="flex-1 flex flex-col overflow-y-auto" *ngIf="collections$ | async as collectionModels">
+        <nav class="flex-1 px-2 py-4 bg-gray-800 space-y-1">
+          <h6 class="text-white pl-2">My Collections</h6>
 
-              Current: "text-gray-300", Default: "text-gray-400 group-hover:text-gray-300"
-            -->
-            <svg class="text-gray-300 mr-4 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <a [ngClass]="collection === currentCollection ? 'bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md' : 'text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md'" *ngFor="let collection of collectionModels" (click)="selectCollection(collection)">
+            <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            {{collection.name}}
+            <span class="flex-1">
+                {{collection.name}}
+              </span>
           </a>
-          <div *ngIf="newCollection">
+
+          <div *ngIf="newCollection" class="pt-5">
             <form class="form" [formGroup]="collectionCreateFG" (ngSubmit)="createCollection()">
-              <div class="form-spacing">
-                <input class="input-title" required type="text" placeholder="Collection" aria-label="Full name" formControlName="nameCreateFC">
-                <button class="btn-create" type="submit">
-                  create
-                </button>
-                <button class="btn-cancel" type="button" (click)="newCollection = false">
-                  Cancel
-                </button>
+              <div>
+                <div class="w-full">
+                  <input class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" required type="text" placeholder="Collection" aria-label="collection" formControlName="nameCreateFC">
+                </div>
+                <div class="w-full mt-2">
+                  <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
+                    create
+                  </button>
+                  <button class="ml-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button" (click)="onCancel()">
+                    Cancel
+                  </button>
+                </div>
+
               </div>
             </form>
             <div *ngIf="nameCreateFC.invalid && submittedCreate" class="warn-text-color">
@@ -78,8 +82,8 @@
             </div>
 
           </div>
-          <div>
-            <button class="btn-transparent" (click)="newCollection = true">New Collection</button>
+          <div class="pt-5 w-full">
+            <button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full" (click)="newCollection = true">New Collection</button>
           </div>
         </nav>
       </div>
@@ -116,7 +120,7 @@
               <form class="form" [formGroup]="collectionCreateFG" (ngSubmit)="createCollection()">
                 <div>
                   <div class="w-full">
-                    <input class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" required type="text" placeholder="Collection" aria-label="collection" formControlName="nameFC">
+                    <input class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" required type="text" placeholder="Collection" aria-label="collection" formControlName="nameCreateFC">
                   </div>
                   <div class="w-full mt-2">
                     <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
