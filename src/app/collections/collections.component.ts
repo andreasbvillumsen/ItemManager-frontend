@@ -126,8 +126,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.deleteDialog = false;
   }
 
-  selectItem(): void
+  selectItem(item: ItemModel): void
   {
+    // this.selectedItem = null;
+    this.selectedItem = item;
+    this.selectedItem.collection = this.currentCollection;
 
   }
 
