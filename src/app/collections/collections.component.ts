@@ -7,7 +7,7 @@ import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {
   AddCollection,
-  ClearError, DeleteCollection,
+  ClearError, ClearStore, DeleteCollection,
   GetAllCollections,
   GetCollectionsForUser,
   GetOneCollectionWithRelations,
@@ -93,6 +93,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(new ClearStore());
     this.store.dispatch(new ListenForCollectionsForUser());
     this.store.dispatch(new ListenForItemsInCollection());
     this.store.dispatch(new ListenForOneCollectionWithRelations());
