@@ -10,6 +10,7 @@ import {first, take} from 'rxjs/operators';
 import {GetOneCollectionWithRelations, UpdateCollection} from '../../collections/state/collections.actions';
 import {UpdateCollectionDto} from '../../collections/shared/dtos/update-collection.dto';
 import {UpdateItem} from '../state/items.actions';
+import {isFatalLinkerError} from '@angular/compiler-cli/linker';
 
 @Component({
   selector: 'app-items-show',
@@ -33,7 +34,7 @@ export class ItemsShowComponent implements OnInit {
     this.editItem = false;
 
     // const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.item$ = this.store.selectOnce(ItemState.item(this.item.id));
+    this.item$ = this.store.select(ItemState.item(this.item.id));
 
   }
 
@@ -50,8 +51,9 @@ export class ItemsShowComponent implements OnInit {
   }
 
   updateItem(): void{
-    this.submittedEdit = true;
-    if (this.itemEditFG.valid){
+   console.log('submit');
+   this.submittedEdit = true;
+   if (this.itemEditFG.valid){
       const newName = this.nameEditFC.value;
       const newDesc = this.descEditFC.value;
 
@@ -72,6 +74,10 @@ export class ItemsShowComponent implements OnInit {
   }
 
   onCancel(): void  {
+      this.itemEditFG.reset();
+      this.submittedEdit = false;
+      this.editItem = false;
+
 
   }
 }

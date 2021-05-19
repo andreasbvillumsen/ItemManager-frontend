@@ -33,17 +33,23 @@
     </dl>
 
       <div *ngIf="editItem">
-        <form class="form" [formGroup]="itemEditFG" (ngSubmit)="updateItem()">
+        <form class="form ml-4" [formGroup]="itemEditFG" (ngSubmit)="updateItem()">
           <div class="form-spacing p-5">
             <div>
             <input class="input-edit-title" required type="text" placeholder="{{ItemModel.name}}" aria-label="Full name" formControlName="nameEditFC">
             </div>
           </div>
+          <div *ngIf="nameEditFC.invalid && submittedEdit" class="warn-text-color">
+            <div *ngIf="nameEditFC.errors.required">name is required</div>
+          </div>
 
           <div class="flex items-center border-b py-2 mb-1">
               <div class="mt-1">
-                <textarea id="about" name="about" rows="5" cols="100" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Desc" formControlName="nameEditFC"></textarea>
+                <textarea id="about" name="about" rows="5" cols="100" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Desc" formControlName="descEditFC"></textarea>
               </div>
+          </div>
+          <div *ngIf="descEditFC.invalid && submittedEdit" class="warn-text-color">
+            <div *ngIf="descEditFC.errors.required">description is required</div>
           </div>
 
           <div class="p-1">
@@ -58,10 +64,10 @@
             </button>
           </div>
         </form>
-        <div *ngIf="nameEditFC.invalid && submittedEdit" class="warn-text-color">
-          <div *ngIf="nameEditFC.errors.required">name is required</div>
+
+
         </div>
-      </div>
+
 
       <!--
       <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
