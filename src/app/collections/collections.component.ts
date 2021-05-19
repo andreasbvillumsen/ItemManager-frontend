@@ -37,6 +37,7 @@ import {ShareCollectionDto} from './shared/dtos/share-collection.dto';
   styleUrls: ['./collections.component.scss']
 })
 export class CollectionsComponent implements OnInit, OnDestroy {
+
   unsubscriber$ = new Subject();
   @Select(CollectionState.error)
   errorMessage$: Observable<string>;
@@ -75,6 +76,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
   currentCollection: CollectionModel | undefined;
   submittedShare: boolean;
+  selectedItem: ItemModel | undefined;
 
   constructor(private store: Store, private router: Router) { }
 
@@ -134,6 +136,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     }
     this.onCancel();
     this.deleteDialog = false;
+  }
+
+  selectItem(): void
+  {
+
   }
 
   ngOnDestroy(): void {
