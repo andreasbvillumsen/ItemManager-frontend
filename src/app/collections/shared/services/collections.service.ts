@@ -11,6 +11,7 @@ import {UpdateCollectionDto} from '../dtos/update-collection.dto';
 import {Socket} from 'ngx-socket-io';
 import {DeleteCollection} from '../../state/collections.actions';
 import {DeleteCollectionDto} from '../dtos/delete-collection.dto';
+import {ShareCollectionDto} from '../dtos/share-collection.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -117,4 +118,7 @@ export class CollectionsService {
     this.socket.connect();
   }
 
+  shareCollection(collection: ShareCollectionDto): void {
+    this.socket.emit('shareCollection', collection);
+  }
 }

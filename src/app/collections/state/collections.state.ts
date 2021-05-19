@@ -14,7 +14,7 @@ import {
   ListenForCollectionsForUser,
   ListenForCollectionUpdated,
   ListenForErrors,
-  ListenForOneCollectionWithRelations,
+  ListenForOneCollectionWithRelations, ShareCollection,
   StopListening,
   UpdateCollection,
   UpdateCollectionsStore,
@@ -22,6 +22,7 @@ import {
   UpdateError, UpdateStoreWithUpdatedCollection
 } from './collections.actions';
 import {takeUntil} from 'rxjs/operators';
+import {ShareCollectionDto} from '../shared/dtos/share-collection.dto';
 
 export interface CollectionsStateModel{
   collections: CollectionModel[];
@@ -111,6 +112,10 @@ export class CollectionState {
     this.collectionsService.updateCollection(action.collection);
 
 
+  }
+  @Action(ShareCollection)
+  shareCollection(ctx: StateContext<CollectionsStateModel>, action: ShareCollection): void {
+    this.collectionsService.shareCollection(action.collection);
   }
 
   @Action(DeleteCollection)

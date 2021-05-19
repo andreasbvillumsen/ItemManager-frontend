@@ -14,7 +14,7 @@ import {
   ListenForCollectionsForUser,
   ListenForCollectionUpdated,
   ListenForErrors,
-  ListenForOneCollectionWithRelations,
+  ListenForOneCollectionWithRelations, ShareCollection,
   StopListening,
   UpdateCollection,
 } from './state/collections.actions';
@@ -29,6 +29,7 @@ import {CreateCollectionDto} from './shared/dtos/create-collection.dto';
 import {UpdateCollectionDto} from './shared/dtos/update-collection.dto';
 import {CreateItemDto} from '../items/shared/dtos/create-item.dto';
 import {DeleteCollectionDto} from './shared/dtos/delete-collection.dto';
+import {ShareCollectionDto} from './shared/dtos/share-collection.dto';
 
 @Component({
   selector: 'app-collections',
@@ -53,6 +54,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   submittedEdit: boolean;
   editCollection: boolean;
   deleteDialog: boolean;
+  shareCol: boolean;
   profileOpened = false;
   newItem = false;
   collectionCreateFG = new FormGroup({
@@ -60,6 +62,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   });
   collectionEditFG = new FormGroup({
     nameEditFC: new FormControl('', Validators.required)
+  });
+  collectionShareFG = new FormGroup({
+    shareFC: new FormControl('', Validators.required)
   });
   @Select(CollectionState.collection)
   collection$: Observable<CollectionModel>;
@@ -70,12 +75,17 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   });
 
   currentCollection: CollectionModel | undefined;
+  submittedShare: boolean;
   selectedItem: ItemModel | undefined;
 
   constructor(private store: Store, private router: Router) { }
 
   get nameCreateFC(): AbstractControl{
     return this.collectionCreateFG.get('nameCreateFC');
+  }
+
+  get shareFC(): AbstractControl{
+    return this.collectionShareFG.get('shareFC');
   }
 
   get nameEditFC(): AbstractControl{
@@ -111,6 +121,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.submittedCreate = false;
     this.editCollection = false;
     this.submittedEdit = false;
+    this.shareCol = false;
+    this.submittedShare = false;
   }
 
   getAuth(): Observable<AuthModel> {
@@ -217,10 +229,16 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   onCancel(): void {
     if (this.newCollection) {
       this.newCollection = false;
+      this.submittedCreate = false;
       this.nameCreateFC.reset();
     } else if (this.editCollection) {
       this.editCollection = false;
+      this.submittedEdit = false;
       this.nameEditFC.reset();
+    } else if (this.shareCol) {
+      this.shareCol = false;
+      this.submittedShare = false;
+      this.shareFC.reset();
     }
   }
 
@@ -245,5 +263,19 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
   onCancelDelete(): void {
     this.deleteDialog = false;
+  }
+
+  shareCollection(): void {
+    this.submittedShare = true;
+    if (this.collectionShareFG.valid){
+      const collectionToShare: ShareCollectionDto = {
+        id: this.currentCollection.id,
+        userEmail: this.shareFC.value
+      };
+      this.store.dispatch(new ShareCollection(collectionToShare));
+      this.submittedShare = false;
+    }
+    this.collectionShareFG.reset();
+    this.shareCol = false;
   }
 }
