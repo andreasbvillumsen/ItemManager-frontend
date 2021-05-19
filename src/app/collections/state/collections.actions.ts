@@ -2,6 +2,7 @@ import {CollectionModel} from '../shared/models/CollectionModel';
 import {CreateCollectionDto} from '../shared/dtos/create-collection.dto';
 import {UpdateCollectionDto} from '../shared/dtos/update-collection.dto';
 import {DeleteCollectionDto} from '../shared/dtos/delete-collection.dto';
+import {ShareCollectionDto} from '../shared/dtos/share-collection.dto';
 
 
 export class ListenForCollections {
@@ -96,6 +97,12 @@ export class UpdateError {
 
   static readonly type = '[collection] Update errorMessage';
 
+}
+
+export class ShareCollection {
+  constructor(public collection: ShareCollectionDto) {}
+
+  static readonly type = '[collection] Share collection between users';
 }
 
 

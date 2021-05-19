@@ -78,7 +78,7 @@
               My Collections
             </h3>
 
-            <a [ngClass]="collection === currentCollection ? 'bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md' : 'text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md'" *ngFor="let collection of collectionModels" (click)="selectCollection(collection)">
+            <a [ngClass]="collection === currentCollection ? 'bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md' : 'text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md'" *ngFor="let collection of collectionModels" (click)="selectCollection(collection); selectItem(null)">
               <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" viewBox="0 0 17 19" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M3.891 1.418C3.888.815 3.451.328 2.913.33L.967.34C.43.343-.003.834 0 1.437l.08 16.326c.003.603.44 1.09.978 1.087l1.946-.01c.536-.002.97-.493.967-1.096L3.89 1.418z" fill="#b3b3b3"/><path fill="#fff" d="M.005 2.961H3.91v1.164H.005zM.064 15.324h3.913v1.164H.064z"/><path d="M8.234 1.444C8.231.84 7.794.354 7.256.356L5.31.366c-.536.003-.97.494-.967 1.097l.08 16.326c.003.603.44 1.09.978 1.087l1.946-.01c.537-.002.97-.493.967-1.096l-.08-16.326z" fill="#b3b3b3"/><path fill="#fff" d="M4.348 2.961h3.904v1.164H4.348zM4.412 15.324h3.906v1.164H4.412z"/><path d="M12.197.835c-.155-.583-.702-.944-1.22-.806l-1.881.5c-.52.139-.814.724-.66 1.306l4.198 15.778c.155.582.702.943 1.221.805l1.88-.5c.52-.138.815-.723.66-1.306L12.197.835z" fill="#b3b3b3"/><path fill="#fff" d="M8.83 3.31l3.769-.983.294 1.127-3.77.983zM12.005 15.258l3.776-.984.293 1.126-3.775.985z"/></svg>
               <span class="flex-1">
                 {{collection.name}}
@@ -133,7 +133,7 @@
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
             <div>
-              <button (click)="toggleProfileOpened()" type="button" class="text-gray-400 hover:text-gray-500 max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <button (click)="toggleProfileOpened(); " type="button" class="text-gray-400 hover:text-gray-500 max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -157,19 +157,30 @@
     </div>
 
     <!-- Page Body -->
-    <main class="flex-1 relative overflow-y-auto focus:outline-none">
+    <main class="flex-1 relative overflow-y-auto focus:outline-none " *ngIf="currentCollection">
 
       <div class="py-6">
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8" *ngIf="currentCollection" >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8"  >
+          <div *ngIf="selectedItem">
+            <app-items-show [item]="selectedItem" (backEvent)="selectItem(null)"> </app-items-show>
+          </div>
+        </div>
+          <div *ngIf="selectedItem == null">
 
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8"  >
           <div class="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
             <div>
             <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center" *ngIf="!editCollection">
               {{currentCollection.name}}'s Items
-              <button type="button" (click)="editCollection = true">
+              <button type="button" (click)="editCollection = true" class="pl-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button type="button" (click)="shareCol = true" class="pl-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                 </svg>
               </button>
             </h3>
@@ -261,9 +272,6 @@
                           <div class="mt-1">
                             <textarea id="about" formControlName="itemDescFC" rows="3" class="shadow-sm focus:ring-light-blue-500 focus:border-light-blue-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
                           </div>
-                          <p class="mt-2 text-sm text-gray-500">
-                            Brief description for your profile. URLs are hyperlinked.
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -292,9 +300,42 @@
               </div>
             </div>
 
+            <div *ngIf="shareCol">
+              <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <form class="form" [formGroup]="collectionShareFG" (ngSubmit)="shareCollection()">
+                      <div class="form-spacing">
+                        <input class="input-edit-title" required type="text" placeholder="Email of user" aria-label="Full name" formControlName="shareFC">
+                        <button class="btn-create" type="submit">
+                          save
+                        </button>
+                        <button class="btn-cancel" type="button" (click)="onCancel()">
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                    <div *ngIf="shareFC.invalid && submittedShare" class="warn-text-color">
+                      <div *ngIf="shareFC.errors.required">email is required</div>
+                    </div>
+                  </div>
+              </div>
+              <div class="relative my-5">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center">
+                <span class="px-3 bg-gray-100 text-lg font-medium text-gray-900">
+                  Items
+                </span>
+                </div>
+              </div>
+            </div>
+
+
+
             <!-- This example requires Tailwind CSS v2.0+ -->
             <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" *ngIf="items$ | async as itemModels">
-              <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200" *ngFor="let item of itemModels" routerLink="/items/show/{{item.id}}">
+              <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200" *ngFor="let item of itemModels" (click)="selectItem(item)">
                 <!-- This example requires Tailwind CSS v2.0+ -->
                 <div class="sm:flex">
                   <div class="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4">
@@ -310,6 +351,7 @@
             </ul>
 
 
+          </div>
           </div>
 
           <!-- This example requires Tailwind CSS v2.0+ -->
