@@ -33,9 +33,9 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
     descEditFC: new FormControl('', Validators.required)
   });
   unsubscriber$ = new Subject();
-  basePath = '/uploads';
   selectedFiles: File;
   currentFileUpload: FileUpload;
+  storageRef = this.storage.ref('/uploads');
 
   constructor(private store: Store, private route: ActivatedRoute, private storage: AngularFireStorage) { }
 
@@ -77,7 +77,9 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
 
    if (this.itemEditFG.valid){
       if (this.selectedFiles) {
-        this.deleteImage();
+        if (this.item.imgName) {
+          this.storageRef.child(this.item.imgName).delete();
+        }
 
         const basePath = '/uploads';
         const file = this.selectedFiles;
@@ -137,7 +139,7 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
   }
 
   deleteItem(): void{
-    this.deleteImage();
+    this.storageRef.child(this.item.imgName).delete();
 
     this.deleteDialog = false;
     const itemToDelete = {
@@ -150,11 +152,6 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
     this.store.dispatch(new DeleteItem(itemToDelete));
     this.backButton();
 
-  }
-
-  deleteImage(): void {
-    const storageRef = this.storage.ref(this.basePath);
-    storageRef.child(this.item.imgName).delete();
   }
 
   showDeleteDialog(): void {

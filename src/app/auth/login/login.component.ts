@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/services/auth.service';
 import {Router} from '@angular/router';
 import {LoginDto} from '../shared/dtos/login.dto';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +34,8 @@ export class LoginComponent implements OnInit {
   get password() { return this.loginForm.get('password'); }
 
   onSubmit(): void {
+    console.log('submitted login form');
+    console.log(environment.apiUrl);
     this.submitted = true;
 
     // stop here if form is invalid
