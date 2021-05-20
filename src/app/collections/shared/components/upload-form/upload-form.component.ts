@@ -21,7 +21,7 @@ export class UploadFormComponent implements OnInit {
     this.selectedFiles = event.target.files;
   }
 
-  upload(): void {
+  upload(): string {
     const file = this.selectedFiles.item(0);
     this.selectedFiles = undefined;
 
@@ -34,5 +34,6 @@ export class UploadFormComponent implements OnInit {
         console.log(error);
       }
     );
+    return this.uploadService.downloadUrl;
   }
 }

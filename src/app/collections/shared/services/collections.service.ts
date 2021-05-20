@@ -29,26 +29,10 @@ export class CollectionsService {
           name: readCollectionDto.name,
           items: new Array<ItemModel>(),
           users: new Array<UserModel>()
-
         })))
       );
-
-
-
-/*
- id: number;
-  name: string;
-  items: ItemModel[];
-  users: UserModel[];
- .fromEvent<ReadItemDto[]>('allItems').pipe(
-        map((readItemDtos: ReadItemDto[] ) =>
-          readItemDtos.map(readItemDto => ({
-            id: readItemDto.id,
-            name: readItemDto.name,
-            desc: readItemDto.desc,
-            collection: null }) )
-      ));*/
   }
+
   listenForAllCollectionsForUser(): Observable<CollectionModel[]>{
     return this.socket
       .fromEvent<ReadCollectionDto[]>('allCollectionsForUser').pipe(
@@ -58,32 +42,26 @@ export class CollectionsService {
             name: readCollectionDto.name,
             items: new Array<ItemModel>(),
             users: new Array<UserModel>()
-
           })))
-
       );
-
   }
 
-    listenForCollectionUpdated(): Observable<CollectionModel>{
-        return this.socket
-            .fromEvent<ReadCollectionDto>('collectionUpdated').pipe(map(readCollectionDto => ({
-                id: readCollectionDto.id,
-                name: readCollectionDto.name,
-                items: new Array<ItemModel>(),
-                users: new Array<UserModel>()
-            })));
-
-    }
+  listenForCollectionUpdated(): Observable<CollectionModel>{
+      return this.socket
+          .fromEvent<ReadCollectionDto>('collectionUpdated').pipe(map(readCollectionDto => ({
+              id: readCollectionDto.id,
+              name: readCollectionDto.name,
+              items: new Array<ItemModel>(),
+              users: new Array<UserModel>()
+          })));
+  }
 
   listenForOneCollection(): Observable<CollectionModel>{
     return this.socket
       .fromEvent<CollectionModel>('oneCollection');
-
   }
 
   createCollection(createCollectionDto: CreateCollectionDto): void {
-    console.log(createCollectionDto.name);
     this.socket.emit('createCollection', createCollectionDto);
   }
 
@@ -93,7 +71,7 @@ export class CollectionsService {
 
   deleteCollection(deleteCollectionDto: DeleteCollectionDto): void {
     this.socket.emit('deleteCollection', deleteCollectionDto);
- }
+  }
   getCollectionsForUser(userid: number): void {
       this.socket.emit('findAllCollectionsByUserID', userid);
   }
@@ -113,6 +91,7 @@ export class CollectionsService {
     console.log('Disconnected');
     this.socket.disconnect();
   }
+
   connect(): void {
     console.log('connected');
     this.socket.connect();

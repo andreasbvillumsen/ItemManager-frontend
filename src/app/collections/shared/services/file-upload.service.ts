@@ -11,6 +11,7 @@ import { FileUpload } from '../models/FileUpload';
 })
 export class FileUploadService {
   private basePath = '/uploads';
+  public downloadUrl = '';
 
   constructor(private db: AngularFireDatabase, private storage: AngularFireStorage) { }
 
@@ -23,6 +24,7 @@ export class FileUploadService {
       finalize(() => {
         storageRef.getDownloadURL().subscribe(downloadURL => {
           fileUpload.url = downloadURL;
+          this.downloadUrl = downloadURL;
           fileUpload.name = fileUpload.file.name;
           this.saveFileData(fileUpload);
         });

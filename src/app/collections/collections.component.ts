@@ -8,7 +8,6 @@ import {CollectionModel} from './shared/models/CollectionModel';
 import {
   AddCollection,
   ClearError, ClearStore, DeleteCollection,
-  GetAllCollections,
   GetCollectionsForUser,
   GetOneCollectionWithRelations,
   ListenForCollectionsForUser,
@@ -18,7 +17,7 @@ import {
   StopListening,
   UpdateCollection,
 } from './state/collections.actions';
-import {filter, first, take, takeUntil} from 'rxjs/operators';
+import {first, take, takeUntil} from 'rxjs/operators';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
 import {AddItem, ItemsInCollection, ListenForItemsInCollection} from '../items/state/items.actions';
@@ -30,6 +29,8 @@ import {UpdateCollectionDto} from './shared/dtos/update-collection.dto';
 import {CreateItemDto} from '../items/shared/dtos/create-item.dto';
 import {DeleteCollectionDto} from './shared/dtos/delete-collection.dto';
 import {ShareCollectionDto} from './shared/dtos/share-collection.dto';
+import {FileUpload} from './shared/models/FileUpload';
+import {FileUploadService} from './shared/services/file-upload.service';
 
 @Component({
   selector: 'app-collections',
@@ -78,7 +79,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   submittedShare: boolean;
   selectedItem: ItemModel | undefined;
 
-  constructor(private store: Store, private router: Router) { }
+  selectedFiles: FileList;
+  currentFileUpload: FileUpload;
+  percentage: number;
+
+  constructor(private store: Store, private router: Router, private uploadService: FileUploadService) { }
 
   get nameCreateFC(): AbstractControl{
     return this.collectionCreateFG.get('nameCreateFC');
@@ -142,14 +147,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   selectItem(item: ItemModel): void
   {
     // this.selectedItem = null;
-    if(item != null) {
+    if (item != null) {
       this.selectedItem = {id: item.id, desc: item.desc, name: item.name, collection: this.currentCollection};
-    }else
-      {
-        this.selectedItem = null;
-      }
-
-
+    } else {
+      this.selectedItem = null;
+    }
   }
 
   ngOnDestroy(): void {
@@ -248,17 +250,37 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  selectFile(event): void {
+    this.selectedFiles = event.target.files;
+  }
+
   createNewItem(): void {
     if (this.createItemFG.valid) {
-      this.auth$.pipe(take(1)).subscribe(auth => {
-        const newItemDto: CreateItemDto = {
-          name: this.createItemFG.get('itemNameFC').value,
-          desc: this.createItemFG.get('itemDescFC').value,
-          collection: this.currentCollection};
-        this.store.dispatch(new AddItem(newItemDto));
-      });
-      this.createItemFG.reset();
-      this.newItem = false;
+
+      const file = this.selectedFiles.item(0);
+      this.selectedFiles = undefined;
+
+      this.currentFileUpload = new FileUpload(file);
+      this.uploadService.pushFileToStorage(this.currentFileUpload).subscribe(
+        percentage => {
+          this.percentage = Math.round(percentage);
+
+          if (this.percentage === 100) {
+            this.auth$.pipe(take(1)).subscribe(() => {
+              const newItemDto: CreateItemDto = {
+                name: this.createItemFG.get('itemNameFC').value,
+                desc: this.createItemFG.get('itemDescFC').value,
+                collection: this.currentCollection};
+              this.store.dispatch(new AddItem(newItemDto));
+            });
+            this.createItemFG.reset();
+            this.newItem = false;
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
     }
   }
 

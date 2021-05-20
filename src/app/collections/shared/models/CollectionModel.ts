@@ -6,5 +6,4 @@ export interface CollectionModel {
   name: string;
   items: ItemModel[];
   users: UserModel[];
-
 }
