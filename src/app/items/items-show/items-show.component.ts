@@ -6,9 +6,12 @@ import {Observable, Subject} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {first, take, takeUntil} from 'rxjs/operators';
-import {DeleteItem, ListenForErrors, StopListening, UpdateItem, ClearError} from '../state/items.actions';
+import {finalize, first, take, takeUntil} from 'rxjs/operators';
+import {DeleteItem, ListenForErrors, StopListening, UpdateItem, ClearError, AddItem} from '../state/items.actions';
 import {AngularFireStorage} from '@angular/fire/storage';
+import {FileUpload} from '../../collections/shared/models/FileUpload';
+import {CreateItemDto} from '../shared/dtos/create-item.dto';
+import {UpdateItemDto} from '../shared/dtos/update-item.dto';
 
 @Component({
   selector: 'app-items-show',
@@ -31,11 +34,16 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
   });
   unsubscriber$ = new Subject();
   basePath = '/uploads';
+  selectedFiles: File;
+  currentFileUpload: FileUpload;
 
   constructor(private store: Store, private route: ActivatedRoute, private storage: AngularFireStorage) { }
 
   ngOnInit(): void {
     this.editItem = false;
+
+    this.nameEditFC.setValue(this.item.name);
+    this.descEditFC.setValue(this.item.desc);
 
     // const id = Number(this.route.snapshot.paramMap.get('id'));
     this.item$ = this.store.select(ItemState.item(this.item.id));
@@ -51,6 +59,7 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
   get nameEditFC(): AbstractControl{
     return this.itemEditFG.get('nameEditFC');
   }
+
   get descEditFC(): AbstractControl{
     return this.itemEditFG.get('descEditFC');
   }
@@ -59,32 +68,76 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
     this.backEvent.next(false);
   }
 
+  selectFile(event): void {
+    this.selectedFiles = event.target.files.item(0);
+  }
+
   updateItem(): void{
-   console.log('submit');
    this.submittedEdit = true;
+
    if (this.itemEditFG.valid){
-      const newName = this.nameEditFC.value;
-      const newDesc = this.descEditFC.value;
-      const itemToUpdate = {
-        id: this.item.id,
-        name: newName,
-        desc: newDesc,
-        imgName: this.item.imgName,
-        imgLink: this.item.imgLink,
-        collection: this.item.collection
-      };
+      if (this.selectedFiles) {
+        this.deleteImage();
 
-      this.store.dispatch(new UpdateItem(itemToUpdate));
+        const basePath = '/uploads';
+        const file = this.selectedFiles;
+        this.selectedFiles = undefined;
+        this.currentFileUpload = new FileUpload(file);
 
-      this.submittedEdit = false;
-      this.editItem = false;
-      this.nameEditFC.reset();
+        const filePath = `${basePath}/${this.currentFileUpload.file.name}`;
+        const storageRef = this.storage.ref(filePath);
+        const uploadTask = this.storage.upload(filePath, this.currentFileUpload.file);
+
+        uploadTask.snapshotChanges().pipe(
+          finalize(() => {
+            storageRef.getDownloadURL().subscribe(downloadURL => {
+              const updateItemDto: UpdateItemDto = {
+                id: this.item.id,
+                name: this.nameEditFC.value,
+                desc: this.descEditFC.value,
+                imgName: this.currentFileUpload.file.name,
+                imgLink: downloadURL,
+                collection: this.item.collection
+              };
+
+              this.item = updateItemDto;
+
+              console.log(updateItemDto);
+
+              this.store.dispatch(new UpdateItem(updateItemDto));
+
+              this.editItem = false;
+              this.nameEditFC.setValue(this.item.name);
+              this.descEditFC.setValue(this.item.desc);
+            });
+          })
+        ).subscribe();
+      } else {
+        const newName = this.nameEditFC.value;
+        const newDesc = this.descEditFC.value;
+        const updateItemDto: UpdateItemDto = {
+          id: this.item.id,
+          name: newName,
+          desc: newDesc,
+          imgName: this.item.imgName,
+          imgLink: this.item.imgLink,
+          collection: this.item.collection
+        };
+
+        this.item = updateItemDto;
+
+        this.store.dispatch(new UpdateItem(updateItemDto));
+
+        this.submittedEdit = false;
+        this.editItem = false;
+        this.nameEditFC.setValue(this.item.name);
+        this.descEditFC.setValue(this.item.desc);
+      }
     }
   }
 
   deleteItem(): void{
-    const storageRef = this.storage.ref(this.basePath);
-    storageRef.child(this.item.imgName).delete();
+    this.deleteImage();
 
     this.deleteDialog = false;
     const itemToDelete = {
@@ -99,16 +152,20 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
 
   }
 
+  deleteImage(): void {
+    const storageRef = this.storage.ref(this.basePath);
+    storageRef.child(this.item.imgName).delete();
+  }
+
   showDeleteDialog(): void {
     this.deleteDialog = true;
   }
 
   onCancel(): void  {
-      this.itemEditFG.reset();
+      this.nameEditFC.setValue(this.item.name);
+      this.descEditFC.setValue(this.item.desc);
       this.submittedEdit = false;
       this.editItem = false;
-
-
   }
 
   onCancelDelete(): void {
@@ -122,7 +179,5 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
 
   clearError(): void {
       this.store.dispatch(new ClearError());
-
-
   }
 }

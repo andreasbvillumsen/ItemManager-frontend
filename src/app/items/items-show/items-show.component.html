@@ -37,9 +37,15 @@
 
       <div *ngIf="editItem">
         <form class="form ml-4" [formGroup]="itemEditFG" (ngSubmit)="updateItem()">
+          <input
+            type="file"
+            class="text-nowrap text-truncate"
+            (change)="selectFile($event)"
+            required
+          />
           <div class="form-spacing p-5">
             <div>
-            <input class="input-edit-title" required type="text" placeholder="{{ItemModel.name}}" aria-label="Full name" formControlName="nameEditFC">
+            <input class="input-edit-title" required type="text" aria-label="Full name" formControlName="nameEditFC">
             </div>
           </div>
           <div *ngIf="nameEditFC.invalid && submittedEdit" class="warn-text-color">
@@ -48,7 +54,7 @@
 
           <div class="flex items-center border-b py-2 mb-1">
               <div class="mt-1">
-                <textarea id="about" name="about" rows="5" cols="100" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Desc" formControlName="descEditFC"></textarea>
+                <textarea id="about" name="about" rows="5" cols="100" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" formControlName="descEditFC"></textarea>
               </div>
           </div>
           <div *ngIf="descEditFC.invalid && submittedEdit" class="warn-text-color">

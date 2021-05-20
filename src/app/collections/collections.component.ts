@@ -80,9 +80,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   submittedShare: boolean;
   selectedItem: ItemModel | undefined;
 
-  selectedFiles: FileList;
+  selectedFiles: File;
   currentFileUpload: FileUpload;
-  percentage: number;
 
   constructor(private store: Store,
               private router: Router,
@@ -261,40 +260,56 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   selectFile(event): void {
-    this.selectedFiles = event.target.files;
+    this.selectedFiles = event.target.files.item(0);
   }
 
   createNewItem(): void {
     if (this.createItemFG.valid) {
-      const basePath = '/uploads';
-      const file = this.selectedFiles.item(0);
-      this.selectedFiles = undefined;
-      this.currentFileUpload = new FileUpload(file);
+      if (this.selectedFiles) {
+        const basePath = '/uploads';
+        const file = this.selectedFiles;
+        this.selectedFiles = undefined;
+        this.currentFileUpload = new FileUpload(file);
 
-      const filePath = `${basePath}/${this.currentFileUpload.file.name}`;
-      const storageRef = this.storage.ref(filePath);
-      const uploadTask = this.storage.upload(filePath, this.currentFileUpload.file);
+        const filePath = `${basePath}/${this.currentFileUpload.file.name}`;
+        const storageRef = this.storage.ref(filePath);
+        const uploadTask = this.storage.upload(filePath, this.currentFileUpload.file);
 
-      uploadTask.snapshotChanges().pipe(
-        finalize(() => {
-          storageRef.getDownloadURL().subscribe(downloadURL => {
-            const newItemDto: CreateItemDto = {
-              name: this.createItemFG.get('itemNameFC').value,
-              desc: this.createItemFG.get('itemDescFC').value,
-              imgName: this.currentFileUpload.file.name,
-              imgLink: downloadURL,
-              collection: this.currentCollection
-            };
+        uploadTask.snapshotChanges().pipe(
+          finalize(() => {
+            storageRef.getDownloadURL().subscribe(downloadURL => {
+              const newItemDto: CreateItemDto = {
+                name: this.createItemFG.get('itemNameFC').value,
+                desc: this.createItemFG.get('itemDescFC').value,
+                imgName: this.currentFileUpload.file.name,
+                imgLink: downloadURL,
+                collection: this.currentCollection
+              };
 
-            console.log(newItemDto);
+              console.log(newItemDto);
 
-            this.store.dispatch(new AddItem(newItemDto));
+              this.store.dispatch(new AddItem(newItemDto));
 
-            this.createItemFG.reset();
-            this.newItem = false;
-          });
-        })
-      ).subscribe();
+              this.createItemFG.reset();
+              this.newItem = false;
+            });
+          })
+        ).subscribe();
+      } else {
+        const newItemDto: CreateItemDto = {
+          name: this.createItemFG.get('itemNameFC').value,
+          desc: this.createItemFG.get('itemDescFC').value,
+          collection: this.currentCollection
+        };
+
+        console.log(newItemDto);
+
+        this.store.dispatch(new AddItem(newItemDto));
+
+        this.createItemFG.reset();
+        this.newItem = false;
+      }
+
     }
   }
 
