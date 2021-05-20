@@ -42,6 +42,10 @@ export class DeleteCollection {
 
 }
 
+export class ClearStore{
+  static readonly type = '[collection] Clear store';
+}
+
 export class UpdateCollectionsStore {
   constructor(public collections: CollectionModel[]) {}
 

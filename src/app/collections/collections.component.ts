@@ -7,7 +7,7 @@ import {CollectionState} from './state/collections.state';
 import {CollectionModel} from './shared/models/CollectionModel';
 import {
   AddCollection,
-  ClearError, DeleteCollection,
+  ClearError, ClearStore, DeleteCollection,
   GetAllCollections,
   GetCollectionsForUser,
   GetOneCollectionWithRelations,
@@ -93,6 +93,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(new ClearStore());
     this.store.dispatch(new ListenForCollectionsForUser());
     this.store.dispatch(new ListenForItemsInCollection());
     this.store.dispatch(new ListenForOneCollectionWithRelations());
@@ -141,8 +142,13 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   selectItem(item: ItemModel): void
   {
     // this.selectedItem = null;
-    this.selectedItem = item;
-    this.selectedItem.collection = this.currentCollection;
+    if(item != null) {
+      this.selectedItem = {id: item.id, desc: item.desc, name: item.name, collection: this.currentCollection};
+    }else
+      {
+        this.selectedItem = null;
+      }
+
 
   }
 
@@ -277,5 +283,10 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     }
     this.collectionShareFG.reset();
     this.shareCol = false;
+  }
+
+  backFromItem(): void {
+    this.selectItem(null);
+    this.store.dispatch(new ItemsInCollection(this.currentCollection.id));
   }
 }

@@ -5,7 +5,7 @@ import {Subject, Subscription} from 'rxjs';
 import {CollectionsService} from '../shared/services/collections.service';
 import {
   AddCollection,
-  ClearError,
+  ClearError, ClearStore,
   DeleteCollection,
   GetAllCollections,
   GetCollectionsForUser,
@@ -153,6 +153,12 @@ export class CollectionState {
       collection: action.collection
     };
     ctx.setState(newState);
+  }
+
+  @Action(ClearStore)
+  ClearStore(ctx: StateContext<CollectionsStateModel>): void{
+    ctx.setState(null);
+
   }
 
   @Action(GetCollectionsForUser)

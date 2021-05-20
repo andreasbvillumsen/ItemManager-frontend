@@ -1,5 +1,6 @@
 import {ItemModel} from '../shared/models/ItemModel';
 import {CreateItemDto} from '../shared/dtos/create-item.dto';
+import {UpdateItemDto} from '../shared/dtos/update-item.dto';
 
 
 export class ListenForItems {
@@ -34,7 +35,7 @@ export class GetAllItems{
 }
 
 export class DeleteItem {
-  constructor(public itemId: number) {}
+  constructor(public item: UpdateItemDto) {}
 
   static readonly type = '[item] delete item';
 

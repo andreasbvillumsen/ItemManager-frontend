@@ -110,7 +110,7 @@ export class ItemState {
 
   @Action(DeleteItem)
   DeleteItem(ctx: StateContext<ItemsStateModel> , action: DeleteItem): void {
-    this.itemService.deleteItem(action.itemId);
+    this.itemService.deleteItem(action.item);
 
 
   }
