@@ -284,4 +284,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.collectionShareFG.reset();
     this.shareCol = false;
   }
+
+  backFromItem(): void {
+    this.selectItem(null);
+    this.store.dispatch(new ItemsInCollection(this.currentCollection.id));
+  }
 }
