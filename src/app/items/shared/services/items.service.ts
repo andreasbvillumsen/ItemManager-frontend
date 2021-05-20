@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {ItemModel} from '../models/ItemModel';
 import {ReadItemDto} from '../dtos/read-item.dto';
-import {ReadCollectionDto} from '../../../collections/shared/dtos/read-collection.dto';
-import {map, tap} from 'rxjs/operators';
-import {CollectionModel} from '../../../collections/shared/models/CollectionModel';
+import {map} from 'rxjs/operators';
 import {CreateItemDto} from '../dtos/create-item.dto';
 import {UpdateItemDto} from '../dtos/update-item.dto';
 import {Socket} from 'ngx-socket-io';
@@ -24,6 +22,7 @@ export class ItemsService {
             id: readItemDto.id,
             name: readItemDto.name,
             desc: readItemDto.desc,
+            imgName: readItemDto.imgName,
             imgLink: readItemDto.imgLink,
             collection: null }) )
       ));
@@ -36,6 +35,7 @@ export class ItemsService {
             id: readItemDto.id,
             name: readItemDto.name,
             desc: readItemDto.desc,
+            imgName: readItemDto.imgName,
             imgLink: readItemDto.imgLink,
             collection: null }) )
         ));
@@ -51,6 +51,7 @@ export class ItemsService {
       id: item.id,
       name: item.name,
       desc: item.desc,
+      imgName: item.imgName,
       imgLink: item.imgLink,
       collection: item.collection};
     this.socket.emit('updateItem', updateItemDto);

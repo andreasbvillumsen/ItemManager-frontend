@@ -8,6 +8,7 @@ import { Output, EventEmitter } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {first, take, takeUntil} from 'rxjs/operators';
 import {DeleteItem, ListenForErrors, StopListening, UpdateItem, ClearError} from '../state/items.actions';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 @Component({
   selector: 'app-items-show',
@@ -29,8 +30,9 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
     descEditFC: new FormControl('', Validators.required)
   });
   unsubscriber$ = new Subject();
+  basePath = '/uploads';
 
-  constructor(private store: Store, private route: ActivatedRoute ) { }
+  constructor(private store: Store, private route: ActivatedRoute, private storage: AngularFireStorage) { }
 
   ngOnInit(): void {
     this.editItem = false;
@@ -44,9 +46,7 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
       .subscribe(error => {
         this.errorMessage = error;
       });
-
   }
-
 
   get nameEditFC(): AbstractControl{
     return this.itemEditFG.get('nameEditFC');
@@ -67,15 +67,14 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
       const newDesc = this.descEditFC.value;
       const itemToUpdate = {
         id: this.item.id,
-        name: this.item.name,
-        desc: this.item.desc,
+        name: newName,
+        desc: newDesc,
+        imgName: this.item.imgName,
         imgLink: this.item.imgLink,
-        collection: this.item.collection};
+        collection: this.item.collection
+      };
 
-      this.store.dispatch(itemToUpdate);
-
-
-
+      this.store.dispatch(new UpdateItem(itemToUpdate));
 
       this.submittedEdit = false;
       this.editItem = false;
@@ -84,14 +83,18 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
   }
 
   deleteItem(): void{
+    const storageRef = this.storage.ref(this.basePath);
+    storageRef.child(this.item.imgName).delete();
+
     this.deleteDialog = false;
-    const itemToDelte = {
+    const itemToDelete = {
       id: this.item.id,
       name: this.item.name,
       desc: this.item.desc,
+      imgName: this.item.imgName,
       imgLink: this.item.imgLink,
       collection: this.item.collection};
-    this.store.dispatch(itemToDelte);
+    this.store.dispatch(new DeleteItem(itemToDelete));
     this.backButton();
 
   }

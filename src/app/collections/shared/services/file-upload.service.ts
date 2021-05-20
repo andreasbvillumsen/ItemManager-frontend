@@ -15,7 +15,7 @@ export class FileUploadService {
 
   constructor(private db: AngularFireDatabase, private storage: AngularFireStorage) { }
 
-  pushFileToStorage(fileUpload: FileUpload): Observable<number> {
+  pushFileToStorage(fileUpload: FileUpload): Observable<any> {
     const filePath = `${this.basePath}/${fileUpload.file.name}`;
     const storageRef = this.storage.ref(filePath);
     const uploadTask = this.storage.upload(filePath, fileUpload.file);
@@ -24,14 +24,14 @@ export class FileUploadService {
       finalize(() => {
         storageRef.getDownloadURL().subscribe(downloadURL => {
           fileUpload.url = downloadURL;
-          this.downloadUrl = downloadURL;
           fileUpload.name = fileUpload.file.name;
           this.saveFileData(fileUpload);
+          this.downloadUrl = downloadURL;
         });
       })
     ).subscribe();
 
-    return uploadTask.percentageChanges();
+    return storageRef.getDownloadURL();
   }
 
   private saveFileData(fileUpload: FileUpload): void {

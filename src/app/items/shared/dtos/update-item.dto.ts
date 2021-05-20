@@ -5,5 +5,6 @@ export interface UpdateItemDto  {
   name: string;
   desc: string;
   collection: CollectionModel;
+  imgName?: string;
   imgLink?: string;
 }

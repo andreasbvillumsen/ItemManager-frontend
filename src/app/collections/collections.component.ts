@@ -17,7 +17,7 @@ import {
   StopListening,
   UpdateCollection,
 } from './state/collections.actions';
-import {first, take, takeUntil} from 'rxjs/operators';
+import {finalize, first, take, takeUntil} from 'rxjs/operators';
 import {ItemState} from '../items/state/items.state';
 import {ItemModel} from '../items/shared/models/ItemModel';
 import {AddItem, ItemsInCollection, ListenForItemsInCollection} from '../items/state/items.actions';
@@ -31,6 +31,7 @@ import {DeleteCollectionDto} from './shared/dtos/delete-collection.dto';
 import {ShareCollectionDto} from './shared/dtos/share-collection.dto';
 import {FileUpload} from './shared/models/FileUpload';
 import {FileUploadService} from './shared/services/file-upload.service';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 @Component({
   selector: 'app-collections',
@@ -83,7 +84,10 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   currentFileUpload: FileUpload;
   percentage: number;
 
-  constructor(private store: Store, private router: Router, private uploadService: FileUploadService) { }
+  constructor(private store: Store,
+              private router: Router,
+              private uploadService: FileUploadService,
+              private storage: AngularFireStorage) { }
 
   get nameCreateFC(): AbstractControl{
     return this.collectionCreateFG.get('nameCreateFC');
@@ -148,7 +152,13 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   {
     // this.selectedItem = null;
     if (item != null) {
-      this.selectedItem = {id: item.id, desc: item.desc, name: item.name, imgLink: item.imgLink, collection: this.currentCollection};
+      this.selectedItem = {
+        id: item.id,
+        desc: item.desc,
+        name: item.name,
+        imgName: item.imgName,
+        imgLink: item.imgLink,
+        collection: this.currentCollection};
     } else {
       this.selectedItem = null;
     }
@@ -256,32 +266,35 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
   createNewItem(): void {
     if (this.createItemFG.valid) {
-
+      const basePath = '/uploads';
       const file = this.selectedFiles.item(0);
       this.selectedFiles = undefined;
-
       this.currentFileUpload = new FileUpload(file);
-      this.uploadService.pushFileToStorage(this.currentFileUpload).subscribe(
-        percentage => {
-          this.percentage = Math.round(percentage);
 
-          if (this.percentage === 100) {
-            this.auth$.pipe(take(1)).subscribe(() => {
-              const newItemDto: CreateItemDto = {
-                name: this.createItemFG.get('itemNameFC').value,
-                desc: this.createItemFG.get('itemDescFC').value,
-                imgLink: this.uploadService.downloadUrl,
-                collection: this.currentCollection};
-              this.store.dispatch(new AddItem(newItemDto));
-            });
+      const filePath = `${basePath}/${this.currentFileUpload.file.name}`;
+      const storageRef = this.storage.ref(filePath);
+      const uploadTask = this.storage.upload(filePath, this.currentFileUpload.file);
+
+      uploadTask.snapshotChanges().pipe(
+        finalize(() => {
+          storageRef.getDownloadURL().subscribe(downloadURL => {
+            const newItemDto: CreateItemDto = {
+              name: this.createItemFG.get('itemNameFC').value,
+              desc: this.createItemFG.get('itemDescFC').value,
+              imgName: this.currentFileUpload.file.name,
+              imgLink: downloadURL,
+              collection: this.currentCollection
+            };
+
+            console.log(newItemDto);
+
+            this.store.dispatch(new AddItem(newItemDto));
+
             this.createItemFG.reset();
             this.newItem = false;
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
+          });
+        })
+      ).subscribe();
     }
   }
 

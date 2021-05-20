@@ -4,5 +4,6 @@ export interface CreateItemDto {
   name: string;
   desc: string;
   collection: CollectionModel;
-  imgLink: string;
+  imgName?: string;
+  imgLink?: string;
 }

@@ -2,6 +2,6 @@ export interface ReadItemDto {
   id: number;
   name: string;
   desc: string;
-  imgLink: string;
-
+  imgName?: string;
+  imgLink?: string;
 }
