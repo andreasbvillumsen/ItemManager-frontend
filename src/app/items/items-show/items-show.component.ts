@@ -65,8 +65,14 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
    if (this.itemEditFG.valid){
       const newName = this.nameEditFC.value;
       const newDesc = this.descEditFC.value;
+      const itemToUpdate = {
+        id: this.item.id,
+        name: this.item.name,
+        desc: this.item.desc,
+        imgLink: this.item.imgLink,
+        collection: this.item.collection};
 
-      this.store.dispatch(new UpdateItem({id: this.item.id, name: newName, desc: newDesc, collection: this.item.collection}));
+      this.store.dispatch(itemToUpdate);
 
 
 
@@ -79,7 +85,13 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
 
   deleteItem(): void{
     this.deleteDialog = false;
-    this.store.dispatch(new DeleteItem({id: this.item.id, name: this.item.name, desc: this.item.desc, collection: this.item.collection}));
+    const itemToDelte = {
+      id: this.item.id,
+      name: this.item.name,
+      desc: this.item.desc,
+      imgLink: this.item.imgLink,
+      collection: this.item.collection};
+    this.store.dispatch(itemToDelte);
     this.backButton();
 
   }

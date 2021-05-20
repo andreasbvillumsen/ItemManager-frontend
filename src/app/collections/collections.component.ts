@@ -142,8 +142,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   selectItem(item: ItemModel): void
   {
     // this.selectedItem = null;
-    if(item != null) {
-      this.selectedItem = {id: item.id, desc: item.desc, name: item.name, collection: this.currentCollection};
+    if (item != null) {
+      this.selectedItem = {id: item.id, desc: item.desc, name: item.name, imgLink: item.imgLink, collection: this.currentCollection};
     }else
       {
         this.selectedItem = null;
@@ -254,6 +254,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         const newItemDto: CreateItemDto = {
           name: this.createItemFG.get('itemNameFC').value,
           desc: this.createItemFG.get('itemDescFC').value,
+          imgLink: null,
           collection: this.currentCollection};
         this.store.dispatch(new AddItem(newItemDto));
       });

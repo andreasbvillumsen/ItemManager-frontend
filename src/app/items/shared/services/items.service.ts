@@ -24,6 +24,7 @@ export class ItemsService {
             id: readItemDto.id,
             name: readItemDto.name,
             desc: readItemDto.desc,
+            imgLink: readItemDto.imgLink,
             collection: null }) )
       ));
   }
@@ -35,6 +36,7 @@ export class ItemsService {
             id: readItemDto.id,
             name: readItemDto.name,
             desc: readItemDto.desc,
+            imgLink: readItemDto.imgLink,
             collection: null }) )
         ));
   }
@@ -45,7 +47,12 @@ export class ItemsService {
   }
 
   updateItem(item: ItemModel): void {
-    const updateItemDto: UpdateItemDto = {id: item.id, name: item.name , desc: item.desc, collection: item.collection};
+    const updateItemDto: UpdateItemDto = {
+      id: item.id,
+      name: item.name,
+      desc: item.desc,
+      imgLink: item.imgLink,
+      collection: item.collection};
     this.socket.emit('updateItem', updateItemDto);
 
   }
