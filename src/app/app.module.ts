@@ -1,8 +1,8 @@
-import {Injectable, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {Socket, SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
+import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 import {environment} from '../environments/environment';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import {NgxsModule} from '@ngxs/store';
@@ -14,6 +14,9 @@ import { RegisterComponent } from './auth/register/register.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthState} from './auth/state/auth.state';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireDatabaseModule} from '@angular/fire/database';
+import {AngularFireStorageModule} from '@angular/fire/storage';
 
 const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
@@ -36,6 +39,9 @@ const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
     }),
     NgxsLoggerPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireStorageModule
   ],
   providers: [],
   bootstrap: [AppComponent]
