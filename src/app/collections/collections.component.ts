@@ -340,4 +340,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.selectItem(null);
     this.store.dispatch(new ItemsInCollection(this.currentCollection.id));
   }
+
+  selectEditCollection(): void {
+    this.nameEditFC.setValue(this.currentCollection.name);
+    this.editCollection = true;
+  }
 }
