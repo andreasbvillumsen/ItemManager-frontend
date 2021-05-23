@@ -34,8 +34,6 @@ export class LoginComponent implements OnInit {
   get password() { return this.loginForm.get('password'); }
 
   onSubmit(): void {
-    console.log('submitted login form');
-    console.log(environment.apiUrl);
     this.submitted = true;
 
     // stop here if form is invalid

@@ -104,8 +104,6 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
 
               this.item = updateItemDto;
 
-              console.log(updateItemDto);
-
               this.store.dispatch(new UpdateItem(updateItemDto));
 
               this.editItem = false;

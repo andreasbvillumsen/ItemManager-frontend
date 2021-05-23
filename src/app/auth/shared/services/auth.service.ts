@@ -22,17 +22,13 @@ export class AuthService {
 
   // Check if we can log in user. If we can, then we store the token and username in local storage.
   login(loginDto: LoginDto): Observable<boolean> {
-    console.log('loginDto ', loginDto);
     return this.http.post<any>(environment.apiUrl + '/auth/login', loginDto)
       .pipe(map(response => {
-        console.log('response ', response);
         const token = response.token;
         const user: UserModel = response.user;
         const authModel: AuthModel = { user, token };
-        console.log('authModel ', authModel);
         // login successful if there's a jwt token in the response
         if (token) {
-          console.log('Got here');
           this.store.dispatch(new SetAuth(authModel));
 
           // store username and jwt token in local storage to keep user logged in between page refreshes

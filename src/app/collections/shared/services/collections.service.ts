@@ -88,12 +88,10 @@ export class CollectionsService {
   }
 
   disconnect(): void {
-    console.log('Disconnected');
     this.socket.disconnect();
   }
 
   connect(): void {
-    console.log('connected');
     this.socket.connect();
   }
 

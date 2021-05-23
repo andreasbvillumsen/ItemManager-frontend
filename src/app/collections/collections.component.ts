@@ -164,7 +164,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('Destroyed');
     this.unsubscriber$.next();
     this.unsubscriber$.complete();
     this.store.dispatch(new StopListening());
@@ -207,7 +206,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
             users: collection.users,
             items: collection.items,
             userid: auth.user.id};
-          console.log(updateCollectionDto);
           this.store.dispatch(new UpdateCollection(updateCollectionDto));
         });
     });
@@ -286,8 +284,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
                 collection: this.currentCollection
               };
 
-              console.log(newItemDto);
-
               this.store.dispatch(new AddItem(newItemDto));
 
               this.createItemFG.reset();
@@ -301,8 +297,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
           desc: this.createItemFG.get('itemDescFC').value,
           collection: this.currentCollection
         };
-
-        console.log(newItemDto);
 
         this.store.dispatch(new AddItem(newItemDto));
 
