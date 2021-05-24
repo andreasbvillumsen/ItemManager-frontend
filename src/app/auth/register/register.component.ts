@@ -14,7 +14,7 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
   loading = false;
-  errormessage = '';
+  errormessage: string | undefined;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService) { }
 
@@ -58,9 +58,13 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/collections']);
         },
         error => {
-          this.errormessage = error.error;
+          this.errormessage = error.message;
           this.loading = false;
         });
+  }
+  clearError(): void {
+    this.errormessage = undefined;
+
   }
 
 }

@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {UserModel} from '../../../users/shared/models/UserModel';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {LoginDto} from '../dtos/login.dto';
 import {RegisterDto} from '../dtos/register.dto';
 import {AuthState} from '../../state/auth.state';
@@ -40,7 +40,7 @@ export class AuthService {
           // return error to indicate failed login
           throw Error('User email and password does not match');
         }
-      }));
+      }), catchError(err => { throw Error(err.error.message); }));
   }
 
   register(registerDto: RegisterDto): Observable<boolean> {
@@ -62,7 +62,7 @@ export class AuthService {
           // return false to indicate failed registering
           return false;
         }
-      }));
+      }), catchError(err => {throw Error(err.error.message); } ) );
   }
 
   logout(): void {

@@ -4,6 +4,7 @@ import {AuthService} from '../shared/services/auth.service';
 import {Router} from '@angular/router';
 import {LoginDto} from '../shared/dtos/login.dto';
 import {environment} from '../../../environments/environment';
+import {ClearError} from '../../collections/state/collections.actions';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
   loading = false;
-  errormessage = '';
+  errormessage: string | undefined;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService) { }
 
@@ -49,9 +50,13 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/collections']);
         },
         error => {
-          this.errormessage = error.error;
+          this.errormessage = error.message;
           this.loading = false;
         });
+  }
+  clearError(): void {
+    this.errormessage = undefined;
+
   }
 
 }
