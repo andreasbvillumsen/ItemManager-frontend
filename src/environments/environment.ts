@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://thecollector1.herokuapp.com',
+  apiUrl: 'http://localhost:3400',
   firebase: {
     apiKey: 'AIzaSyAHML_w8jvHGHT7pqP52GsYq47Y8VMwXDI',
     authDomain: 'thecollector-23f37.firebaseapp.com',

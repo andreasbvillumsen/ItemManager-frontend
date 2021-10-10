@@ -78,6 +78,7 @@ export class ItemsShowComponent implements OnInit, OnDestroy {
    if (this.itemEditFG.valid){
       if (this.selectedFiles) {
         if (this.item.imgName) {
+          // delete the previous image that was on the item.
           this.storageRef.child(this.item.imgName).delete();
         }
 
